@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
+    <Properties>
+        <!--<Property name = "LOG_DIR">log</Property>
+        <Property name="ARCHIVE_LOG_DIR">${LOG_DIR}/archive</Property>-->
+        <Property name="pattern_console">%d{MM/dd  yyyy HH:mm:ss} [%t] %-5level %logger{5} - %msg%n</Property>
+    </Properties>
+    <ThresholdFilter level="trace"/>
+    <Appenders>
+        <Console name="MyConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern_console}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="debug">
+            <AppenderRef ref="MyConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>
