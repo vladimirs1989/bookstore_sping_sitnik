@@ -13,13 +13,14 @@ import java.util.List;
 @Controller("usersCommand")
 public class UsersCommand implements Command {
 
-    @Autowired
+
     private static UserService USER_SERVICE;
 
     public UsersCommand(UserService userService) {
         this.USER_SERVICE = userService;
     }
 
+    @Autowired
     public static void setUserService(UserService userService) {
         USER_SERVICE = userService;
     }

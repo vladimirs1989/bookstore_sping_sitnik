@@ -9,12 +9,14 @@ import org.springframework.stereotype.Controller;
 
 @Controller("bookCommand")
 public class BookCommand implements Command {
-    @Autowired
-    private static BookService BOOK_SERVICE;
 
+    private static BookService BOOK_SERVICE;
+    @Autowired
     public BookCommand(BookService bookService) {
         this.BOOK_SERVICE = bookService;
     }
+
+
 
     public String execute(HttpServletRequest req) {
         Long id = Long.valueOf(req.getParameter("id"));

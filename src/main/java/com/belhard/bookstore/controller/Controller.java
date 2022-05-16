@@ -9,19 +9,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 
 @WebServlet("/controller")
 public class Controller extends HttpServlet {
 
-    //public static ClassPathXmlApplicationContext context;
     public static AnnotationConfigApplicationContext context;
 
     @Override
     public void init() throws ServletException {
-        //context = new ClassPathXmlApplicationContext("applicationContext.xml");
         context = new AnnotationConfigApplicationContext(ContextConfiguration.class);
     }
 

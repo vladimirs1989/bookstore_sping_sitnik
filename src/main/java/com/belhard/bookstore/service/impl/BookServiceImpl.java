@@ -80,7 +80,7 @@ public class BookServiceImpl implements BookService {
     public BookDto createBook(BookDto bookDto) {
         logger.debug("Start method service - createBook");
         Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
-        if(existing != null) {
+        if (existing != null) {
             throw new RuntimeException("Book with Isbn exists");
         }
         Book newBook = toBook(bookDto);
@@ -105,7 +105,7 @@ public class BookServiceImpl implements BookService {
     public BookDto updateBook(BookDto bookDto) {
         logger.debug("Start method service - updateBook");
         Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
-        if(existing != null && existing.getId() != bookDto.getId()) {
+        if (existing != null && existing.getId() != bookDto.getId()) {
             throw new RuntimeException("Book with Isbn exists");
         }
         Book newBook = toBook(bookDto);
@@ -117,9 +117,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(Long id) {
         logger.debug("Start method service - deleteBook");
-       if (!bookDao.deleteBook(id)){
-           throw new RuntimeException("Book didn't delete");
-       }
+        if (!bookDao.deleteBook(id)) {
+            throw new RuntimeException("Book didn't delete");
+        }
     }
 
     @Override

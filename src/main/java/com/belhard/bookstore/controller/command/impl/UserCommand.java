@@ -10,13 +10,13 @@ import org.springframework.stereotype.Controller;
 @Controller("userCommand")
 public class UserCommand implements Command {
 
-    @Autowired
+
     private static UserService USER_SERVICE;
 
     public UserCommand(UserService userService) {
         this.USER_SERVICE = userService;
     }
-
+    @Autowired
     public static void setUserService(UserService userService) {
         USER_SERVICE = userService;
     }

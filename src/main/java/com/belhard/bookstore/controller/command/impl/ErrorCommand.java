@@ -8,9 +8,9 @@ import org.springframework.stereotype.Controller;
 
 @Controller("errorCommand")
 public class ErrorCommand implements Command {
-    @Autowired
-    private static BookService BOOK_SERVICE;
 
+    private static BookService BOOK_SERVICE;
+    @Autowired
     public ErrorCommand(BookService bookService) {
         this.BOOK_SERVICE = bookService;
     }

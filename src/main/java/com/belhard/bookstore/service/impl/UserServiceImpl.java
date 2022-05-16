@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
+
     @Autowired
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;

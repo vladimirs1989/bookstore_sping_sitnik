@@ -12,9 +12,9 @@ import java.util.List;
 @Controller("booksCommand")
 public class BooksCommand implements Command {
 
-    @Autowired
-    private static BookService BOOK_SERVICE;
 
+    private static BookService BOOK_SERVICE;
+    @Autowired
     public BooksCommand(BookService bookService) {
         this.BOOK_SERVICE = bookService;
     }
