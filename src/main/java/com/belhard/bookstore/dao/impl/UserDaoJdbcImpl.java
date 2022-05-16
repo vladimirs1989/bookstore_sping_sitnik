@@ -26,6 +26,10 @@ public class UserDaoJdbcImpl implements UserDao {
     public static final String DELETE_USER = "UPDATE users SET deleted = true WHERE id = ? AND deleted = false";
     public static final String COUNT_USER = "SELECT COUNT(*) AS count FROM users WHERE deleted = false";
 
+    public UserDaoJdbcImpl() {
+        System.out.println("Constructor UserDaoJdbcImpl empty");
+    }
+
     @Override
     public List<User> getAllUser() {
         List<User> users = new ArrayList<>();

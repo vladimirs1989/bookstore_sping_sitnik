@@ -7,7 +7,13 @@ import com.belhard.bookstore.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class UserCommand implements Command {
-    private static final UserService USER_SERVICE = new UserServiceImpl();
+
+    private final UserService USER_SERVICE;
+
+    public UserCommand(UserService userService) {
+        System.out.println("Constructor UserServiceImpl with parametrs");
+        this.USER_SERVICE = userService;
+    }
 
     public String execute(HttpServletRequest req) {
         Long id = Long.valueOf(req.getParameter("id"));

@@ -12,7 +12,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao = new UserDaoJdbcImpl();
+
+
+    public UserServiceImpl(UserDao userDao) {
+        System.out.println("Constructor UserServiceImpl with args");
+        this.userDao = userDao;
+    }
+
+    private UserDao userDao;
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Override

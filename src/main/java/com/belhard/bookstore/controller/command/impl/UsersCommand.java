@@ -10,7 +10,11 @@ import java.util.List;
 
 public class UsersCommand implements Command {
 
-    private static final UserService USER_SERVICE = new UserServiceImpl();
+    private static UserService USER_SERVICE;
+
+    public UsersCommand(UserService userService) {
+        this.USER_SERVICE = userService;
+    }
 
     public String execute(HttpServletRequest req) {
         List<UserDto> users = USER_SERVICE.getAllUser();
