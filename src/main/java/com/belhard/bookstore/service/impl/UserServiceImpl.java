@@ -11,9 +11,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserServiceImpl implements UserService {
+    public UserServiceImpl() {
+    }
 
+    /*public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }*/
 
-    public UserServiceImpl(UserDao userDao) {
+    public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
 

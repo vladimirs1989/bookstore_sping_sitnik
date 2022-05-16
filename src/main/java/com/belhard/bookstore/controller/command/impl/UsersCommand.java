@@ -11,9 +11,16 @@ public class UsersCommand implements Command {
 
     private static UserService USER_SERVICE;
 
+    /*public UsersCommand() {
+    }*/
+
     public UsersCommand(UserService userService) {
         this.USER_SERVICE = userService;
     }
+
+    /*public static void setUserService(UserService userService) {
+        USER_SERVICE = userService;
+    }*/
 
     public String execute(HttpServletRequest req) {
         List<UserDto> users = USER_SERVICE.getAllUser();
