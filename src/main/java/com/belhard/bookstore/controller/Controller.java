@@ -18,7 +18,7 @@ public class Controller extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-         context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        context = new ClassPathXmlApplicationContext("applicationContext.xml");
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Controller extends HttpServlet {
         processRequest(req, resp);
     }
 
-    private void  processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void processRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("command");
         Command command = CommandFactory.getInstance().getCommand(action);
         String page = command.execute(req);

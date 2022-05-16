@@ -3,7 +3,6 @@ package com.belhard.bookstore.controller.command.impl;
 import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
-import com.belhard.bookstore.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class UserCommand implements Command {
@@ -11,7 +10,6 @@ public class UserCommand implements Command {
     private final UserService USER_SERVICE;
 
     public UserCommand(UserService userService) {
-        System.out.println("Constructor UserServiceImpl with parametrs");
         this.USER_SERVICE = userService;
     }
 

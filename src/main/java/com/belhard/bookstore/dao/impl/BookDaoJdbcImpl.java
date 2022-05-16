@@ -26,6 +26,9 @@ public class BookDaoJdbcImpl implements BookDao {
     public static final String DELETE_BOOK = "UPDATE books SET deleted = true WHERE id = ? AND deleted = false";
     public static final String COUNT_BOOK = "SELECT COUNT(*) AS count FROM books WHERE deleted = false";
 
+    public BookDaoJdbcImpl() {
+    }
+
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
         try {

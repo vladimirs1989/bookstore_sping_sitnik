@@ -19,6 +19,20 @@
         <constructor-arg ref="userService"/>
     </bean>
 
+    <bean id="bookDao" class="com.belhard.bookstore.dao.impl.BookDaoJdbcImpl"/>
+    <bean id="bookService" class="com.belhard.bookstore.service.impl.BookServiceImpl">
+        <constructor-arg ref="bookDao"/>
+    </bean>
+    <bean id="bookCommand" class="com.belhard.bookstore.controller.command.impl.BookCommand">
+        <constructor-arg ref="bookService"/>
+    </bean>
+    <bean id="booksCommand" class="com.belhard.bookstore.controller.command.impl.BooksCommand">
+        <constructor-arg ref="bookService"/>
+    </bean>
+
+    <bean id="errorCommand" class="com.belhard.bookstore.controller.command.impl.ErrorCommand">
+        <constructor-arg ref="bookService"/>
+    </bean>
 
 
 

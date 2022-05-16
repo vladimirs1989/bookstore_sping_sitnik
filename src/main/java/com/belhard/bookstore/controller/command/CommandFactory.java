@@ -6,10 +6,6 @@ import com.belhard.bookstore.controller.command.impl.BooksCommand;
 import com.belhard.bookstore.controller.command.impl.ErrorCommand;
 import com.belhard.bookstore.controller.command.impl.UserCommand;
 import com.belhard.bookstore.controller.command.impl.UsersCommand;
-import com.belhard.bookstore.dao.UserDao;
-import com.belhard.bookstore.dao.impl.UserDaoJdbcImpl;
-import com.belhard.bookstore.service.UserService;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,34 +13,32 @@ import java.util.Map;
 public class CommandFactory {
 
 
-    private static class Holder{
+    private static class Holder {
         private static final CommandFactory instance = new CommandFactory();
     }
 
-    public static  CommandFactory getInstance(){
+    public static CommandFactory getInstance() {
         return Holder.instance;
     }
-    private CommandFactory(){
 
+    private CommandFactory() {
     }
 
-    private  static  final Map<String,Command> map = new HashMap<>();
+    private static final Map<String, Command> map = new HashMap<>();
 
     static {
-        //ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-
-        map.put("book", new BookCommand());
-        map.put("books", new BooksCommand());
+        map.put("book", Controller.context.getBean("bookCommand", BookCommand.class));
+        map.put("books", Controller.context.getBean("booksCommand", BooksCommand.class));
         map.put("user", Controller.context.getBean("userCommand", UserCommand.class));
         map.put("users", Controller.context.getBean("usersCommand", UsersCommand.class));
-        map.put("error", new ErrorCommand());
+        map.put("error", Controller.context.getBean("errorCommand", ErrorCommand.class));
     }
 
-    public Command getCommand(String action){
+    public Command getCommand(String action) {
         Command command = map.get(action);
-        if(command == null){
+        if (command == null) {
             return map.get("error");
         }
-        return  command;
+        return command;
     }
 }

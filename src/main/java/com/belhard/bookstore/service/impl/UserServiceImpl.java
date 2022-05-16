@@ -2,7 +2,6 @@ package com.belhard.bookstore.service.impl;
 
 import com.belhard.bookstore.dao.UserDao;
 import com.belhard.bookstore.dao.entity.User;
-import com.belhard.bookstore.dao.impl.UserDaoJdbcImpl;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +14,6 @@ public class UserServiceImpl implements UserService {
 
 
     public UserServiceImpl(UserDao userDao) {
-        System.out.println("Constructor UserServiceImpl with args");
         this.userDao = userDao;
     }
 
