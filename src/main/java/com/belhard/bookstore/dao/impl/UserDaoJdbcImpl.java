@@ -5,6 +5,7 @@ import com.belhard.bookstore.dao.dbconfig.DbConfigurator;
 import com.belhard.bookstore.dao.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository("userDao")
 public class UserDaoJdbcImpl implements UserDao {
 
     private static final Logger logger = LogManager.getLogger(UserDaoJdbcImpl.class);

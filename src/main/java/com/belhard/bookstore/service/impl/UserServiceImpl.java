@@ -2,17 +2,29 @@ package com.belhard.bookstore.service.impl;
 
 import com.belhard.bookstore.dao.UserDao;
 import com.belhard.bookstore.dao.entity.User;
-import com.belhard.bookstore.dao.impl.UserDaoJdbcImpl;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service("userService")
 public class UserServiceImpl implements UserService {
-    private final UserDao userDao = new UserDaoJdbcImpl();
+
+    private UserDao userDao;
+
+    public UserServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
+    @Autowired
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Override
