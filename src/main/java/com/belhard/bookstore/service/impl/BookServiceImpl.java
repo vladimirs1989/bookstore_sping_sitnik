@@ -2,17 +2,30 @@ package com.belhard.bookstore.service.impl;
 
 import com.belhard.bookstore.dao.BookDao;
 import com.belhard.bookstore.dao.entity.Book;
-import com.belhard.bookstore.dao.impl.BookDaoJdbcImpl;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.dto.BookDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service("bookService")
 public class BookServiceImpl implements BookService {
-    private final BookDao bookDao = new BookDaoJdbcImpl();
+
+    private static BookDao bookDao;
+
+    public BookServiceImpl(BookDao bookDao) {
+        this.bookDao = bookDao;
+    }
+
+    @Autowired
+    public static void setBookDao(BookDao bookDao) {
+        BookServiceImpl.bookDao = bookDao;
+    }
+
     private static final Logger logger = LogManager.getLogger(BookServiceImpl.class);
 
     @Override
@@ -67,7 +80,7 @@ public class BookServiceImpl implements BookService {
     public BookDto createBook(BookDto bookDto) {
         logger.debug("Start method service - createBook");
         Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
-        if(existing != null) {
+        if (existing != null) {
             throw new RuntimeException("Book with Isbn exists");
         }
         Book newBook = toBook(bookDto);
@@ -92,7 +105,7 @@ public class BookServiceImpl implements BookService {
     public BookDto updateBook(BookDto bookDto) {
         logger.debug("Start method service - updateBook");
         Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
-        if(existing != null && existing.getId() != bookDto.getId()) {
+        if (existing != null && existing.getId() != bookDto.getId()) {
             throw new RuntimeException("Book with Isbn exists");
         }
         Book newBook = toBook(bookDto);
@@ -104,9 +117,9 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(Long id) {
         logger.debug("Start method service - deleteBook");
-       if (!bookDao.deleteBook(id)){
-           throw new RuntimeException("Book didn't delete");
-       }
+        if (!bookDao.deleteBook(id)) {
+            throw new RuntimeException("Book didn't delete");
+        }
     }
 
     @Override

@@ -3,11 +3,23 @@ package com.belhard.bookstore.controller.command.impl;
 import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
-import com.belhard.bookstore.service.impl.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
+@Controller("userCommand")
 public class UserCommand implements Command {
-    private static final UserService USER_SERVICE = new UserServiceImpl();
+
+
+    private static UserService USER_SERVICE;
+
+    public UserCommand(UserService userService) {
+        this.USER_SERVICE = userService;
+    }
+    @Autowired
+    public static void setUserService(UserService userService) {
+        USER_SERVICE = userService;
+    }
 
     public String execute(HttpServletRequest req) {
         Long id = Long.valueOf(req.getParameter("id"));
