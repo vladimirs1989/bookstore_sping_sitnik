@@ -4,9 +4,11 @@ package com.belhard.bookstore.dao.dbconfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.module.FindException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class DbConfigurator {
     private static final Logger logger = LogManager.getLogger(DbConfigurator.class);
@@ -42,6 +44,5 @@ public class DbConfigurator {
         return connection;
     }
 
-    ;
 }
 
