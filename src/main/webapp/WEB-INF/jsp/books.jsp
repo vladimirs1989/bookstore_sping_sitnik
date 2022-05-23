@@ -21,7 +21,7 @@
         <tr>
         <td>${book.id}</td>
         <td>${book.isbn}</td>
-        <td><a href="controller?command=book&id=${book.id}">${book.title}</a></td>
+        <td><a href="book/${book.id}">${book.title}</a></td>
         <td>${book.author}</td>
         <td>${book.pages}</td>
         <td>${book.cover.toString().toLowerCase()}</td>

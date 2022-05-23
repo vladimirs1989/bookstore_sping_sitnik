@@ -1,33 +1,30 @@
 package com.belhard.bookstore.controller.command.impl;
 
-import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
-import com.belhard.bookstore.service.impl.UserServiceImpl;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
-@Controller("usersCommand")
-public class UsersCommand implements Command {
+@Component
+@RequestMapping("/users")
+public class UsersCommand {
 
-
-    private static UserService USER_SERVICE;
-
-    public UsersCommand(UserService userService) {
-        this.USER_SERVICE = userService;
-    }
+    private static UserService userService;
 
     @Autowired
-    public static void setUserService(UserService userService) {
-        USER_SERVICE = userService;
+    public UsersCommand(UserService userService) {
+        this.userService = userService;
     }
 
-    public String execute(HttpServletRequest req) {
-        List<UserDto> users = USER_SERVICE.getAllUser();
-        req.setAttribute("users", users);
-        return "jsp/users.jsp";
+    @GetMapping
+    public String execute(Model model) {
+        List<UserDto> users = userService.getAllUser();
+        model.addAttribute("users", users);
+        return "users";
     }
 }
