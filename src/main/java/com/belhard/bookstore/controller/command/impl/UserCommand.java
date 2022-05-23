@@ -1,34 +1,33 @@
 package com.belhard.bookstore.controller.command.impl;
 
-import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("userCommand")
-public class UserCommand implements Command {
+@Component
+@RequestMapping("/user")
+public class UserCommand {
 
+    private static UserService userService;
 
-    private static UserService USER_SERVICE;
-
-    public UserCommand(UserService userService) {
-        this.USER_SERVICE = userService;
-    }
     @Autowired
-    public static void setUserService(UserService userService) {
-        USER_SERVICE = userService;
+    public UserCommand(UserService userService) {
+        this.userService = userService;
     }
 
-    public String execute(HttpServletRequest req) {
-        Long id = Long.valueOf(req.getParameter("id"));
-        UserDto userDto = USER_SERVICE.getUserById(id);
+    @GetMapping("/{id}")
+    public String execute(Model model, @PathVariable Long id) {
+        UserDto userDto = userService.getUserById(id);
         if (userDto == null) {
-            req.setAttribute("message", "No user with id: " + id);
-            return "jsp/error.jsp";
+            model.addAttribute("message", "No user with id: " + id);
+            return "error";
         }
-        req.setAttribute("user", userDto);
-        return "jsp/user.jsp";
+        model.addAttribute("user", userDto);
+        return "user";
     }
 }

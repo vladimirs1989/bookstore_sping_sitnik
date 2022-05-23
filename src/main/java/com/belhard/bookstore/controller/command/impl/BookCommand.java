@@ -1,32 +1,33 @@
 package com.belhard.bookstore.controller.command.impl;
 
-import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.dto.BookDto;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Component;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller("bookCommand")
-public class BookCommand implements Command {
+@Component
+@RequestMapping("/book")
+public class BookCommand {
 
-    private static BookService BOOK_SERVICE;
+    private static BookService bookService;
+
     @Autowired
     public BookCommand(BookService bookService) {
-        this.BOOK_SERVICE = bookService;
+        this.bookService = bookService;
     }
 
-
-
-    public String execute(HttpServletRequest req) {
-        Long id = Long.valueOf(req.getParameter("id"));
-        BookDto bookDto = BOOK_SERVICE.getBookById(id);
+    @GetMapping("/{id}")
+    public String execute(Model model, @PathVariable Long id) {
+        BookDto bookDto = bookService.getBookById(id);
         if (bookDto == null) {
-            req.setAttribute("message", "No book with id: " + id);
-            return "jsp/error.jsp";
-
+            model.addAttribute("message", "No book with id: " + id);
+            return "error";
         }
-        req.setAttribute("book", bookDto);
-        return "jsp/book.jsp";
+        model.addAttribute("book", bookDto);
+        return "book";
     }
 }

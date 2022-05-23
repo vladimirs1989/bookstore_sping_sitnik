@@ -17,14 +17,15 @@ public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
 
+    @Autowired
     public UserServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
-    @Autowired
-    public void setUserDao(UserDao userDao) {
+
+    /*public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
-    }
+    }*/
 
 
 
