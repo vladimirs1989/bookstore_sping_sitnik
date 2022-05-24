@@ -1,5 +1,6 @@
 package com.belhard.bookstore.controller.command.impl;
 
+import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.dto.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Component
 @RequestMapping("/books")
-public class BooksCommand {
+public class BooksCommand implements Command {
 
     private static BookService bookService;
 
