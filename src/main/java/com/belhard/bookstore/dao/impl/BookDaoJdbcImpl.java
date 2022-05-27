@@ -1,9 +1,9 @@
 package com.belhard.bookstore.dao.impl;
 
 import com.belhard.bookstore.dao.BookDao;
-import com.belhard.bookstore.dao.mapper.BookRowMapper;
 import com.belhard.bookstore.dao.dbconfig.DbConfigurator;
 import com.belhard.bookstore.dao.entity.Book;
+import com.belhard.bookstore.dao.mapper.BookRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +45,12 @@ public class BookDaoJdbcImpl implements BookDao {
     public static final String DELETE_BOOK = "UPDATE books SET deleted = true WHERE id = :id AND deleted = false";
     public static final String COUNT_BOOK = "SELECT COUNT(*) AS count FROM books WHERE deleted = false";
 
+    @Override
     public List<Book> getAllBooks() {
         return jdbcTemplate.query(GET_ALL, rowMapper);
     }
 
+    @Override
     public Book getBookById(Long id) {
         return jdbcTemplate.queryForObject(GET_BOOK_BY_ID, Map.of("id", id), rowMapper);
         //logger.debug("Database query GET_BOOK_BY_ID");
@@ -60,7 +62,6 @@ public class BookDaoJdbcImpl implements BookDao {
         return jdbcTemplate.queryForObject(GET_BOOK_BY_ISBN, Map.of("isbn", isbn), rowMapper);
         //logger.debug("Database query GET_BOOK_BY_ISBN");
         //logger.error("error in method - getBookByIsbn");
-
     }
 
     @Override
@@ -78,7 +79,7 @@ public class BookDaoJdbcImpl implements BookDao {
         params.put("isbn", book.getIsbn());
         params.put("title", book.getTitle());
         params.put("author", book.getAuthor());
-        params.put(" pages", book.getPages());
+        params.put("pages", book.getPages());
         params.put("cover", book.getCover().toString().toLowerCase());
         params.put("price", book.getPrice());
         SqlParameterSource source = new MapSqlParameterSource(params);
@@ -138,4 +139,5 @@ public class BookDaoJdbcImpl implements BookDao {
         }
         throw new RuntimeException("books not count");
     }
+
 }

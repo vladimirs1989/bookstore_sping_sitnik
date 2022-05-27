@@ -10,6 +10,7 @@ public interface OrderItemDao {
     List<OrderItem> getAllOrderItems();
 
     List<OrderItem> getByOrderItemId(Long id);
+
     OrderItem getOrderItemById(Long id);
 
     OrderItem createOrderItem(OrderItem orderItem);

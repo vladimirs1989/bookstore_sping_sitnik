@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 @Component
 public class OrderRowMapper implements RowMapper<Order> {
@@ -15,7 +16,7 @@ public class OrderRowMapper implements RowMapper<Order> {
         order.setId(resultSet.getLong("id"));
         order.setUserId(resultSet.getLong("user_id"));
         order.setTotalCost(resultSet.getBigDecimal("total_cost"));
-        //order.setTimestamp(resultSet.getTimestamp("timestamp"));
+        order.setTimestamp(LocalDateTime.now());
         order.setStatus(Order.Status.valueOf(resultSet.getString("status")));
         return order;
     }

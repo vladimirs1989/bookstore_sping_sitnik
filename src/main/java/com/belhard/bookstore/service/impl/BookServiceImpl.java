@@ -80,9 +80,9 @@ public class BookServiceImpl implements BookService {
     public BookDto createBook(BookDto bookDto) {
         logger.debug("Start method service - createBook");
         Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
-        if (existing != null) {
+       /* if (existing != null) {
             throw new RuntimeException("Book with Isbn exists");
-        }
+        }*/
         Book newBook = toBook(bookDto);
         Book createdBook = bookDao.createBook(newBook);
         BookDto createdBookDto = toDto(createdBook);

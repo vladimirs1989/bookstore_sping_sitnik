@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Repository("bookDao")
+@Repository("orderDao")
 public class OrderDaoJdbcImpl implements OrderDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -36,7 +36,7 @@ public class OrderDaoJdbcImpl implements OrderDao {
     public static final String GET_ORDER_BY_ID = "SELECT o.id, o.user_id, o.total_cost, o.timestamp, s.name AS status FROM orders o JOIN statuses s ON o.status_id = s.id WHERE o.id = :id ";
     public static final String CREATE_ORDER = "INSERT INTO orders (user_id, total_cost, timestamp, status_id)  VALUES ( :user_id, :total_cost, :timestamp,  (SELECT id FROM statuses WHERE name = :status))";
     public static final String UPDATE_ORDER = "UPDATE orders SET user_id = :user_id, total_cost = :total_cost, timestamp = :timestamp, status_id = (SELECT id FROM statuses WHERE name = :status)  WHERE id = :id ";
-    public static final String DELETE_ORDER = "UPDATE books SET status = cancel WHERE id = :id ";
+    public static final String DELETE_ORDER = "UPDATE orders SET status = cancel WHERE id = :id ";
 
 
     public List<Order> getAllOrders() {
