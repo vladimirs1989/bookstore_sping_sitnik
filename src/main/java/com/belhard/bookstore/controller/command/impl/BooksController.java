@@ -40,6 +40,17 @@ public class BooksController implements Command {
         return "book";
     }
 
+    @GetMapping("book/isbn/{isbn}")
+    public String execute(Model model, @PathVariable String isbn) {
+        BookDto bookDto = bookService.getBookByIsbn(isbn);
+        if (bookDto == null) {
+            model.addAttribute("message", "No book with id: " + isbn);
+            return "error";
+        }
+        model.addAttribute("book", bookDto);
+        return "book";
+    }
+
     @GetMapping
     public String execute(Model model) {
         List<BookDto> books = bookService.getAllBooks();
