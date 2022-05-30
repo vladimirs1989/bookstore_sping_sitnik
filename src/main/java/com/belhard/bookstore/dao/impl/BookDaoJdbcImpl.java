@@ -14,6 +14,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +31,9 @@ public class BookDaoJdbcImpl implements BookDao {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final BookRowMapper rowMapper;
+
+    @PersistenceContext
+    private EntityManager manager;
 
     @Autowired
     public BookDaoJdbcImpl(NamedParameterJdbcTemplate jdbcTemplate, BookRowMapper rowMapper) {
@@ -49,19 +54,28 @@ public class BookDaoJdbcImpl implements BookDao {
 
     @Override
     public List<Book> getAllBooks() {
-        return jdbcTemplate.query(GET_ALL, rowMapper);
+        List<Book> books = manager.createQuery("from Book",Book.class).getResultList();
+        manager.clear();
+        return books;
+        //return jdbcTemplate.query(GET_ALL, rowMapper);
     }
 
     @Override
     public Book getBookById(Long id) {
-        return jdbcTemplate.queryForObject(GET_BOOK_BY_ID, Map.of("id", id), rowMapper);
+        Book book = manager.find(Book.class, id);
+        manager.clear();
+        return book;
+        //return jdbcTemplate.queryForObject(GET_BOOK_BY_ID, Map.of("id", id), rowMapper);
         //logger.debug("Database query GET_BOOK_BY_ID");
         //logger.error("error in method - getBookById");
     }
 
     @Override
     public Book getBookByIsbn(String isbn) {
-        return jdbcTemplate.queryForObject(GET_BOOK_BY_ISBN, Map.of("isbn", isbn), rowMapper);
+        Book book = manager.find(Book.class, isbn);
+        manager.clear();
+        return book;
+        //return jdbcTemplate.queryForObject(GET_BOOK_BY_ISBN, Map.of("isbn", isbn), rowMapper);
         //logger.debug("Database query GET_BOOK_BY_ISBN");
         //logger.error("error in method - getBookByIsbn");
     }
@@ -76,7 +90,12 @@ public class BookDaoJdbcImpl implements BookDao {
 
     @Override
     public Book createBook(Book book) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
+        manager.getTransaction().begin();
+        manager.persist(book);
+        manager.getTransaction().commit();
+        manager.clear();
+        return book;
+        /*KeyHolder keyHolder = new GeneratedKeyHolder();
         Map<String, Object> params = new HashMap<>();
         params.put("isbn", book.getIsbn());
         params.put("title", book.getTitle());
@@ -92,14 +111,19 @@ public class BookDaoJdbcImpl implements BookDao {
         Long id = Optional.ofNullable(keyHolder.getKey())
                 .map(Number::longValue)
                 .orElseThrow(() -> new RuntimeException("Can't create book: " + book));
-        return getBookById(id);
+        return getBookById(id);*/
         //logger.debug("Database query CREATE_BOOK");
         //logger.error("error in method - createBook");
     }
 
     @Override
     public Book updateBook(Book book) {
-        Map<String, Object> params = new HashMap<>();
+        manager.getTransaction().begin();
+        manager.merge(book);
+        manager.getTransaction().commit();
+        manager.clear();
+        return book;
+        /*Map<String, Object> params = new HashMap<>();
         params.put("id", book.getId());
         params.put("isbn", book.getIsbn());
         params.put("title", book.getTitle());
@@ -112,24 +136,35 @@ public class BookDaoJdbcImpl implements BookDao {
         if (rowsUpdated != 1) {
             throw new RuntimeException("Can't update book: " + book);
         }
-        return getBookById(book.getId());
+        return getBookById(book.getId());*/
         //logger.debug("Database query UPDATE_BOOK");
         //logger.error("error in method - updateBook");
     }
 
     @Override
     public boolean deleteBook(Long id) {
-        int result = jdbcTemplate.update(DELETE_BOOK, Map.of("id", id));
+        manager.getTransaction().begin();
+       int row = manager.createNativeQuery(DELETE_BOOK).executeUpdate();
+        manager.getTransaction().commit();
+        manager.clear();
+        return row == 1;
+        /*int result = jdbcTemplate.update(DELETE_BOOK, Map.of("id", id));
         if (result != 1) {
             throw new RuntimeException("Can't delete book with id: " + id);
         }
-        return true;
+        return true;*/
         //logger.debug("Database query DELETE_BOOK");
         //logger.error("error in method - deleteBook");
     }
 
     public int countAllBooks() {
-        try {
+        manager.getTransaction().begin();
+        int rowQv = manager.createNativeQuery(COUNT_BOOK).executeUpdate();
+        manager.getTransaction().commit();
+        manager.clear();
+        return rowQv;
+    }
+        /*try {
             Statement statement = DbConfigurator.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery(COUNT_BOOK);
             logger.debug("Database query COUNT_BOOK");
@@ -140,7 +175,7 @@ public class BookDaoJdbcImpl implements BookDao {
             logger.error("error in method - countAllBooks");
         }
         throw new RuntimeException("books not count");
-    }
+    }*/
    /*private static final Logger logger = LogManager.getLogger(BookDaoJdbcImpl.class);
 
     public static final String GET_ALL = "SELECT b.id, b.isbn, b.title, b.author, b.pages, c.name AS cover, b.price FROM books b JOIN covers c ON b.cover_id = c.id WHERE b.deleted = false ORDER BY b.id";
