@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-<form action="/books" method="post">
+<form action="/books/${book.id}" method="post">
     <label for="isbn-input">Isbn:</label>
     <input id="isbn-input" name="isbn" type="text"/>
     <br/>

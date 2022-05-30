@@ -6,6 +6,7 @@ import com.belhard.bookstore.service.dto.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +19,11 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Controller
 @RequestMapping("/books")
 public class BooksController implements Command {
 
+    @Autowired
     private static BookService bookService;
 
     @Autowired
@@ -29,7 +31,7 @@ public class BooksController implements Command {
         this.bookService = bookService;
     }
 
-    @GetMapping("book/{id}")
+    @GetMapping("/book/{id}")
     public String execute(Model model, @PathVariable Long id) {
         BookDto bookDto = bookService.getBookById(id);
         if (bookDto == null) {
@@ -40,11 +42,11 @@ public class BooksController implements Command {
         return "book";
     }
 
-    @GetMapping("book/isbn/{isbn}")
+    @GetMapping("/isbn/{isbn}")
     public String execute(Model model, @PathVariable String isbn) {
         BookDto bookDto = bookService.getBookByIsbn(isbn);
         if (bookDto == null) {
-            model.addAttribute("message", "No book with id: " + isbn);
+            model.addAttribute("message", "No book with isbn: " + isbn);
             return "error";
         }
         model.addAttribute("book", bookDto);
@@ -87,7 +89,7 @@ public class BooksController implements Command {
         return "book";
     }
 
-    @PostMapping("delete/{id}")
+    @PostMapping("/delete/{id}")
     public  String delete (Model model, @PathVariable Long id){
         bookService.deleteBook(id);
         model.addAttribute("message", "Book with id = " + id + " is deleted");

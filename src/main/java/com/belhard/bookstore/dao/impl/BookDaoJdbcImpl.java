@@ -81,7 +81,7 @@ public class BookDaoJdbcImpl implements BookDao {
         params.put("isbn", book.getIsbn());
         params.put("title", book.getTitle());
         params.put("author", book.getAuthor());
-        params.put(" pages", book.getPages());
+        params.put("pages", book.getPages());
         params.put("cover", book.getCover().toString().toLowerCase());
         params.put("price", book.getPrice());
         SqlParameterSource source = new MapSqlParameterSource(params);
@@ -104,7 +104,7 @@ public class BookDaoJdbcImpl implements BookDao {
         params.put("isbn", book.getIsbn());
         params.put("title", book.getTitle());
         params.put("author", book.getAuthor());
-        params.put(" pages", book.getPages());
+        params.put("pages", book.getPages());
         params.put("cover", book.getCover().toString().toLowerCase());
         params.put("price", book.getPrice());
         SqlParameterSource source = new MapSqlParameterSource(params);
