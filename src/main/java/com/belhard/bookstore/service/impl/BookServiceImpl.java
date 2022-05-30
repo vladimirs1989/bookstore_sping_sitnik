@@ -6,6 +6,7 @@ import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.dto.BookDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @Service("bookService")
 public class BookServiceImpl implements BookService {
 
+@Autowired
     private static BookDao bookDao;
 
 
@@ -79,10 +81,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto createBook(BookDto bookDto) {
         logger.debug("Start method service - createBook");
-        Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
+        /*Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
         if (existing != null) {
             throw new RuntimeException("Book with Isbn exists");
-        }
+        }*/
         Book newBook = toBook(bookDto);
         Book createdBook = bookDao.createBook(newBook);
         BookDto createdBookDto = toDto(createdBook);

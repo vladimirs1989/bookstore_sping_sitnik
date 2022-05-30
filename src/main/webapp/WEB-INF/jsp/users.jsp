@@ -21,7 +21,7 @@
     <c:forEach items="${users}" var="user">
         <tr>
         <td>${user.id}</td>
-        <td><a href="user/${user.id}">${user.lastName}</a></td>
+        <td><a href="users/user/${user.id}">${user.lastName}</a></td>
         <td>${user.firstName}</td>
         <td>${user.email}</td>
         <td>${user.login}</td>

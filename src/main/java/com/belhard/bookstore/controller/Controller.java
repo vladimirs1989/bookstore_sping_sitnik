@@ -39,9 +39,9 @@ public class Controller extends HttpServlet {
 
     static {
         map.put("book", context.getBean("bookCommand", BookCommand.class));
-        map.put("books", context.getBean("booksCommand", BooksCommand.class));
+        map.put("books", context.getBean("booksCommand", BooksController.class));
         map.put("user", context.getBean("userCommand", UserCommand.class));
-        map.put("users", context.getBean("usersCommand", UsersCommand.class));
+        map.put("users", context.getBean("usersCommand", UsersController.class));
         map.put("error", context.getBean("errorCommand", ErrorCommand.class));
     }
 

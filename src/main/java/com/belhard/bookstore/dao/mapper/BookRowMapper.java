@@ -1,4 +1,4 @@
-package com.belhard.bookstore.dao;
+package com.belhard.bookstore.dao.mapper;
 
 import com.belhard.bookstore.dao.entity.Book;
 import org.springframework.jdbc.core.RowMapper;

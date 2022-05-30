@@ -107,4 +107,67 @@ VALUES ('Ivanov', 'Ivan', 'Ivanov@gmail.com', 'Ivan1', 'I1', 33, (SELECT id FROM
        ('Futov', 'Sasha', 'Futov@gmail.com', 'Sasha2', 'S2', 22, (SELECT id FROM roles WHERE role = 'CUSTOMER')),
 	   ('Klimov', 'Oleg', 'Klimov@gmail.com', 'Oleg1', 'O1', 42, (SELECT id FROM roles WHERE role = 'CUSTOMER'));
 
+/*
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS statuses;
+*/
 
+
+CREATE TABLE IF NOT EXISTS statuses(
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS orders(
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGSERIAL ,
+    total_cost DECIMAL (6,2) DEFAULT 0.0 NOT NULL,
+    timestamp DATE NOT NULL,
+    status_id BIGINT REFERENCES statuses
+);
+
+/*
+TRUNCATE orders CASCADE;
+TRUNCATE statuses CASCADE;
+*/
+
+INSERT INTO statuses (name)
+VALUES ('CANCEL'),
+       ('PAID'),
+       ('NOT_PAID');
+
+INSERT INTO orders (user_id, total_cost, timestamp, status_id)
+VALUES ('5', 179.29, '2021-12-02', (SELECT id FROM statuses WHERE name = 'NOT_PAID')),
+       ('8', 175.25, '2022-01-12', (SELECT id FROM statuses WHERE name = 'PAID')),
+       ('9', 105.00, '2022-03-15', (SELECT id FROM statuses WHERE name = 'NOT_PAID')),
+       ('1', 13.00, '2022-04-08', (SELECT id FROM statuses WHERE name = 'PAID')),
+       ('12', 63.46, '2022-05-11', (SELECT id FROM statuses WHERE name = 'NOT_PAID'));
+
+/*
+DROP TABLE IF EXISTS order_items;
+*/
+
+
+CREATE TABLE IF NOT EXISTS order_items(
+    id BIGSERIAL PRIMARY KEY,
+    order_id BIGSERIAL,
+    book_id BIGSERIAL,
+    quantity BIGINT DEFAULT 1,
+    price DECIMAL (6,2) DEFAULT 0.0
+);
+
+/*
+TRUNCATE order_items CASCADE;
+*/
+
+
+INSERT INTO order_items (order_id, book_id, quantity,  price)
+VALUES (1, 12, 1, (SELECT price FROM books WHERE id = 12)),
+       (1, 2, 1, (SELECT price FROM books WHERE id = 2)),
+       (2, 6, 2, (SELECT price FROM books WHERE id = 6)),
+       (2, 4, 1, (SELECT price FROM books WHERE id = 4)),
+       (2, 1, 1, (SELECT price FROM books WHERE id = 1)),
+       (3, 4, 2, (SELECT price FROM books WHERE id = 4)),
+       (3, 9, 1, (SELECT price FROM books WHERE id = 9)),
+       (4, 11, 1, (SELECT price FROM books WHERE id = 11)),
+       (5, 16, 1, (SELECT price FROM books WHERE id = 16));
