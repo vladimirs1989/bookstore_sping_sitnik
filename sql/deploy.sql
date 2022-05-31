@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS statuses(
 
 CREATE TABLE IF NOT EXISTS orders(
     id BIGSERIAL PRIMARY KEY,
-    user_id BIGSERIAL ,
+    user_id BIGSERIAL REFERENCES users,
     total_cost DECIMAL (6,2) DEFAULT 0.0 NOT NULL,
     timestamp DATE NOT NULL,
     status_id BIGINT REFERENCES statuses
@@ -150,10 +150,10 @@ DROP TABLE IF EXISTS order_items;
 
 CREATE TABLE IF NOT EXISTS order_items(
     id BIGSERIAL PRIMARY KEY,
-    order_id BIGSERIAL,
-    book_id BIGSERIAL,
+    order_id BIGSERIAL REFERENCES orders,
+    book_id BIGSERIAL REFERENCES books,
     quantity BIGINT DEFAULT 1,
-    price DECIMAL (6,2) DEFAULT 0.0
+    price DECIMAL (6,2) REFERENCES books.price
 );
 
 /*
