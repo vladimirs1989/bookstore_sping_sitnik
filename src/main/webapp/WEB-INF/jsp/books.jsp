@@ -29,11 +29,11 @@
         <td>${book.cover.toString().toLowerCase()}</td>
         <td>${book.price}</td>
         <td>
-                <form action="/books/edit/${book.id}" method="get"><input type = "submit" value = "Edit"></form>
-            </td>
-            <td>
-                <form action="/books/delete/${book.id}" method="post"><input type = "submit" value = "Delete"></form>
-            </td>
+            <form action="/books/edit/${book.id}" method="get"><input type = "submit" value = "Edit"></form>
+        </td>
+        <td>
+            <form action="/books/delete/${book.id}" method="post"><input type = "submit" value = "Delete"></form>
+        </td>
     </tr>
     </c:forEach>
 </table>

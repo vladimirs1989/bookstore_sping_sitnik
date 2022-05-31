@@ -9,10 +9,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("bookService")
+@Transactional
 public class BookServiceImpl implements BookService {
 
 @Autowired
@@ -106,10 +108,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public BookDto updateBook(BookDto bookDto) {
         logger.debug("Start method service - updateBook");
-        Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
+        /*Book existing = bookDao.getBookByIsbn(bookDto.getIsbn());
         if (existing != null && existing.getId() != bookDto.getId()) {
             throw new RuntimeException("Book with Isbn exists");
-        }
+        }*/
         Book newBook = toBook(bookDto);
         Book receivedBook = bookDao.updateBook(newBook);
         BookDto updatedBookDto = toDto(receivedBook);

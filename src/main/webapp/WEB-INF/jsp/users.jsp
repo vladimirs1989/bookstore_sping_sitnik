@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <title>Books</title>
+    <title>Users</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -28,8 +28,15 @@
         <td>${user.password}</td>
         <td>${user.age}</td>
         <td>${user.role.toString().toLowerCase()}</td>
+          <td>
+              <form action="/users/edit/${user.id}" method="get"><input type = "submit" value = "Edit"></form>
+          </td>
+          <td>
+              <form action="/users/delete/${user.id}" method="post"><input type = "submit" value = "Delete"></form>
+          </td>
     </tr>
     </c:forEach>
 </table>
+<div> <form action="/users/create" method="get"><input type = "submit" value = "Create user"></form></div>
 </body>
 </html>
