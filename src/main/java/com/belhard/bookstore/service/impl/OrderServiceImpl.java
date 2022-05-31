@@ -11,16 +11,25 @@ import com.belhard.bookstore.service.dto.BookDto;
 import com.belhard.bookstore.service.dto.OrderDto;
 import com.belhard.bookstore.service.dto.OrderItemDto;
 import com.belhard.bookstore.service.dto.UserDto;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service("orderService")
+@Transactional
 public class OrderServiceImpl implements OrderService {
+    @Autowired
     private final OrderDao orderDao;
+    @Autowired
     private final OrderItemDao orderItemDao;
+    @Autowired
     private final UserService userService;
+    @Autowired
     private final BookService bookService;
 
     public OrderServiceImpl(OrderDao orderDao, OrderItemDao orderItemDao, UserService userService, BookService bookService) {
