@@ -22,17 +22,23 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "isbn")
     private String isbn;
+
     @Column(name = "title")
     private String title;
+
     @Column(name = "author")
     private String author;
+
     @Column(name = " pages")
     private Integer pages;
-    @Column(name = "cover_id")
+
+    @Column(name = "cover")
     @Enumerated(EnumType.ORDINAL)
     private Cover cover;
+
     @Column(name = "price")
     private BigDecimal price;
 

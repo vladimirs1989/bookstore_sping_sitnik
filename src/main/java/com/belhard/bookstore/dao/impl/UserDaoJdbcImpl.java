@@ -18,12 +18,14 @@ public class UserDaoJdbcImpl implements UserDao {
 
     private static final Logger logger = LogManager.getLogger(UserDaoJdbcImpl.class);
 
-    public static final String COUNT_USER = "SELECT COUNT(*) AS count FROM users WHERE deleted = false";
+    public static final String GET_USER_BY_EMAIL = "select u from User u where u.email =?1 and deleted = false";
+    public static final String GET_USER_BY_LASTNAME = "select u from User u where u.lastName =?1 and deleted = false";
+    public static final String DELETE_USER = "update User u set deleted = true where u.id =?1 and deleted = false";
+    public static final String COUNT_USER = "select count(u) FROM users u where u.deleted = false";
 
     @Override
     public List<User> getAllUser() {
-        List<User> users = manager.createQuery("from User", User.class).getResultList();
-        manager.clear();
+        List<User> users = manager.createQuery("from User where deleted = false", User.class).getResultList();
         return users;
         //logger.debug("Database query GET_ALL");
         //logger.error("error in method - getAllUser");
@@ -32,7 +34,6 @@ public class UserDaoJdbcImpl implements UserDao {
     @Override
     public User getUserById(Long id) {
         User user = manager.find(User.class, id);
-        manager.clear();
         return user;
         //logger.debug("Database query GET_USER_BY_ID");
         //logger.error("error in method - getUserById");
@@ -40,16 +41,15 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public User getUserByEmail(String email) {
-        return manager.find(User.class, email);
-
+        User user = (User) manager.createQuery(GET_USER_BY_EMAIL).setParameter(1, email).getSingleResult();
+        return user;
         //logger.debug("Database query GET_USER_BY_EMAIL");
         //logger.error("error in method - getUserByEmail");
     }
 
     @Override
     public List<User> getUserByLastname(String lastName) {
-        List<User> users = manager.createQuery("from User where lastName = ?1").setParameter(1, lastName).getResultList();
-        manager.clear();
+        List<User> users = manager.createQuery(GET_USER_BY_LASTNAME).setParameter(1, lastName).getResultList();
         return users;
         //logger.debug("Database query GET_USER_BY_LASTNAME");
         //logger.error("error in method - getUserByLastname");
@@ -58,7 +58,6 @@ public class UserDaoJdbcImpl implements UserDao {
     @Override
     public User createUser(User user) {
         manager.persist(user);
-        manager.clear();
         return user;
         //logger.debug("Database query CREATE_USER");
         //logger.error("error in method - createUser");
@@ -74,18 +73,18 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public boolean deleteUser(Long id) {
-        int r = manager.createQuery("delete from User where id = ?1").setParameter(1, id).executeUpdate();
+        int r = manager.createQuery(DELETE_USER).setParameter(1, id).executeUpdate();
         if (r != 1) {
             throw new RuntimeException("Can't delete user with id: " + id);
         }
         return true;
         //logger.debug("Database query DELETE_USER");
         //logger.error("error in method - deleteUser");
-    }//
+    }
 
     @Override
     public int countAllUsers() {
-        int rowQv = manager.createNativeQuery(COUNT_USER).executeUpdate();
+        int rowQv = manager.createQuery(COUNT_USER).executeUpdate();
         manager.clear();
         return rowQv;
         //logger.debug("Database query COUNT_USER");

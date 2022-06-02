@@ -19,14 +19,14 @@ public class OrderDaoItemJdbcImpl implements OrderItemDao {
     private static final Logger logger = LogManager.getLogger(OrderDaoItemJdbcImpl.class);
 
     public List<OrderItem> getAllOrderItems() {
-        List<OrderItem> orderItems = manager.createQuery("from OrderItem", OrderItem.class).getResultList();
-        manager.clear();
+        List<OrderItem> orderItems = manager.createQuery("from OrderItem ", OrderItem.class).getResultList();
         return orderItems;
     }
 
     @Override
     public List<OrderItem> getByOrderItemId(Long id) {
-        return null;
+        List<OrderItem> orderItems = manager.createQuery("from OrderItem where id =?1", OrderItem.class).setParameter(1, id).getResultList();
+        return orderItems;
     }
 
     @Override

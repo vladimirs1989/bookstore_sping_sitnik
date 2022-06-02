@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>User</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
 <h1>User, id = ${user.id}</h1>
@@ -14,7 +14,6 @@
                 <div>age: ${user.age}</div>
                 <div>role: ${user.role.toString().toLowerCase()}</div>
                 <ul>
-                     <li><a href="/books">All books</a> </li>
                      <li><a href="/users">All users</a> </li>
                 </ul>
 </body>

@@ -17,10 +17,10 @@ import java.util.stream.Collectors;
 @Transactional
 public class BookServiceImpl implements BookService {
 
-@Autowired
+
     private static BookDao bookDao;
 
-
+    @Autowired
     public BookServiceImpl(BookDao bookDao) {
         this.bookDao = bookDao;
     }

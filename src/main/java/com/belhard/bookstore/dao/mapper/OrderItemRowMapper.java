@@ -13,8 +13,8 @@ public class OrderItemRowMapper implements RowMapper<OrderItem> {
     @Override
     public OrderItem mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         OrderItem order = new OrderItem();
-        order.setOrder_id(resultSet.getLong("order_id"));
-        order.setBook_id(resultSet.getLong("book_id"));
+        //order.setOrder_id(resultSet.getLong("order_id"));
+        //order.setBook_id(resultSet.getLong("book_id"));
         order.setQuantity(resultSet.getInt("quantity"));
         order.setPrice(resultSet.getBigDecimal("price"));
         return order;

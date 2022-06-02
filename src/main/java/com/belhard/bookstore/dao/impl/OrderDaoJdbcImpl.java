@@ -20,20 +20,17 @@ public class OrderDaoJdbcImpl implements OrderDao {
 
     public List<Order> getAllOrders() {
         List<Order> orders = manager.createQuery("from Order", Order.class).getResultList();
-        manager.clear();
         return orders;
     }
 
     public Order getOrderById(Long id) {
         Order order = manager.find(Order.class, id);
-        manager.clear();
         return order;
     }
 
     @Override
     public Order createOrder(Order order) {
         manager.persist(order);
-        manager.clear();
         return order;
     }
 

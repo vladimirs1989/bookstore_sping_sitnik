@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>User</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
 <form action="/users" method="post">

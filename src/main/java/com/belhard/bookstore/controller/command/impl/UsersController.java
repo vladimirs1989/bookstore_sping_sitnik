@@ -89,11 +89,11 @@ public class UsersController implements Command {
     public String editForm(Model model, @PathVariable Long id) {
         UserDto userDto = userService.getUserById(id);
         model.addAttribute("user", userDto);
-        return "updateUser";
+        return "userUpdate";
     }
 
     @GetMapping("/create")
     public String createForm() {
-        return "createUser";
+        return "userCreate";
     }
 }

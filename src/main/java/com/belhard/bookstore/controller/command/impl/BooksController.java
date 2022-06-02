@@ -99,11 +99,11 @@ public class BooksController implements Command {
     public  String editForm (Model model, @PathVariable Long id){
         BookDto bookDto = bookService.getBookById(id);
         model.addAttribute("book", bookDto);
-        return "updateBook";
+        return "bookUpdate";
     }
 
     @GetMapping("/create")
     public String createForm(){
-        return "createBook";
+        return "bookCreate";
     }
 }

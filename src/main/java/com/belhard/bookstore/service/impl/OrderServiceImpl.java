@@ -23,15 +23,13 @@ import java.util.stream.Collectors;
 @Service("orderService")
 @Transactional
 public class OrderServiceImpl implements OrderService {
-    @Autowired
+
     private final OrderDao orderDao;
-    @Autowired
     private final OrderItemDao orderItemDao;
-    @Autowired
     private final UserService userService;
-    @Autowired
     private final BookService bookService;
 
+    @Autowired
     public OrderServiceImpl(OrderDao orderDao, OrderItemDao orderItemDao, UserService userService, BookService bookService) {
         this.orderDao = orderDao;
         this.orderItemDao = orderItemDao;
@@ -46,29 +44,31 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDto getOrderById(Long id) {
-        Order entity = orderDao.getOrderById(id);
-        return mapToDto(entity);
+        Order order = orderDao.getOrderById(id);
+        return mapToDto(order);
     }
 
-    private OrderDto mapToDto(Order entity) {
-        OrderDto dto = new OrderDto();
-        dto.setId(entity.getId());
-        dto.setTotalCost(entity.getTotalCost());
-        UserDto user = userService.getUserById(entity.getUserId());
-        dto.setUser(user);
+    private OrderDto mapToDto(Order order) {
+        OrderDto orderDto = new OrderDto();
+        orderDto.setId(order.getId());
+        orderDto.setTotalCost(order.getTotalCost());
+        orderDto.setTimestamp(order.getTimestamp());
+        orderDto.setStatusDto(OrderDto.StatusDto.valueOf(order.getStatus().toString()));
+        UserDto userDto = userService.getUserById(order.getId());
+        orderDto.setUserDto(userDto);
+        List<OrderItem> items = orderItemDao.getByOrderItemId(order.getId());
         List<OrderItemDto> itemDtos = new ArrayList<>();
-        List<OrderItem> items = orderItemDao.getByOrderItemId(entity.getId());
         for (OrderItem item : items) {
             OrderItemDto itemDto = new OrderItemDto();
             itemDto.setId(item.getId());
             itemDto.setPrice(item.getPrice());
             itemDto.setQuantity(item.getQuantity());
-            BookDto bookDto = bookService.getBookById(item.getBook_id());
+            BookDto bookDto = bookService.getBookById(item.getBook().getId());
             itemDto.setBook(bookDto);
             itemDtos.add(itemDto);
         }
-        dto.setItems(itemDtos);
-        return dto;
+        orderDto.setItems(itemDtos);
+        return orderDto;
     }
 
     @Override
@@ -79,9 +79,9 @@ public class OrderServiceImpl implements OrderService {
         Order entity = new Order();
         entity.setId(orderDto.getId());
         entity.setTotalCost(orderDto.getTotalCost());
-        entity.setUserId(orderDto.getUser().getId());
+        entity.setUser(entity.getUser());
         entity.setTimestamp(orderDto.getTimestamp());
-        entity.setStatus(orderDto.getStatus());
+        entity.setStatus(entity.getStatus());
         orderDao.updateOrder(entity);
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
@@ -92,6 +92,12 @@ public class OrderServiceImpl implements OrderService {
         return getOrderById(orderDto.getId());
     }
 
+    public List<OrderDto> getAllOrdersByUserId(Long id){
+        UserDto userDto = userService.getUserById(id);
+        List<OrderDto> orderDtos = getAllOrders();
+        return  orderDtos.stream().filter(od->od.getUserDto().getId() == id).collect(Collectors.toList());
+    }
+
     @Override
     public OrderDto updateOrder(OrderDto orderDto) {
         BigDecimal totalCost = calculateOrderCost(orderDto);
@@ -100,14 +106,14 @@ public class OrderServiceImpl implements OrderService {
         Order entity = new Order();
         entity.setId(orderDto.getId());
         entity.setTotalCost(orderDto.getTotalCost());
-        entity.setUserId(orderDto.getUser().getId());
+        entity.setUser(entity.getUser());
         entity.setTimestamp(orderDto.getTimestamp());
-        entity.setStatus(orderDto.getStatus());
+        entity.setStatus(entity.getStatus());
         orderDao.updateOrder(entity);
 
         List<OrderItem> items = orderItemDao.getByOrderItemId(orderDto.getId());
         for (OrderItem item : items) {
-            orderItemDao.getOrderItemById(item.getId());
+            orderItemDao.deleteOrderItem(item.getId());
         }
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
@@ -131,10 +137,10 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderItem mapToEntity(Long orderId, OrderItemDto itemDto) {
         OrderItem item = new OrderItem();
-        item.setOrder_id(orderId);
+        item.setOrder(item.getOrder());
         item.setPrice(itemDto.getPrice());
         item.setQuantity(itemDto.getQuantity());
-        item.setBook_id(itemDto.getBook().getId());
+        item.setBook(item.getBook());
         return item;
     }
 
