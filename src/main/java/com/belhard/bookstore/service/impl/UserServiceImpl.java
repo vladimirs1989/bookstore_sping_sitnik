@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    private UserDto toDto(User entity) {
+    public UserDto toDto(User entity) {
         UserDto dto = new UserDto();
         dto.setId(entity.getId());
         dto.setLastName(entity.getLastName());

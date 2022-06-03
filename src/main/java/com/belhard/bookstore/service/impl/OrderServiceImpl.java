@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
         orderDto.setTotalCost(order.getTotalCost());
         orderDto.setTimestamp(order.getTimestamp());
         orderDto.setStatusDto(OrderDto.StatusDto.valueOf(order.getStatus().toString()));
-        UserDto userDto = userService.getUserById(order.getId());
+        UserDto userDto = userService.getUserById(order.getUser().getId());
         orderDto.setUserDto(userDto);
         List<OrderItem> items = orderItemDao.getByOrderItemId(order.getId());
         List<OrderItemDto> itemDtos = new ArrayList<>();

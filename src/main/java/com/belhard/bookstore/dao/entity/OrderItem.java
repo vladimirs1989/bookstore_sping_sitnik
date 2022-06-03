@@ -99,7 +99,7 @@ public class OrderItem {
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", book=" + book +
-                ", order=" + order +
+                ", order=" + order.getId() +
                 '}';
     }
 }
