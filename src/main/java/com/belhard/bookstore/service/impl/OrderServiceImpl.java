@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
-            OrderItem item = mapToEntity(orderDto.getId(), itemDto);
+            OrderItem item = mapToEntity( itemDto);
             orderItemDao.createOrderItem(item);
         }
         return getOrderById(orderDto.getId());
@@ -118,7 +118,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
-            OrderItem item = mapToEntity(orderDto.getId(), itemDto);
+            OrderItem item = mapToEntity( itemDto);
             orderItemDao.createOrderItem(item);
         }
         return getOrderById(orderDto.getId());
@@ -135,7 +135,7 @@ public class OrderServiceImpl implements OrderService {
         return totalCost;
     }
 
-    private OrderItem mapToEntity(Long orderId, OrderItemDto itemDto) {
+    private OrderItem mapToEntity(OrderItemDto itemDto) {
         OrderItem item = new OrderItem();
         item.setOrder(item.getOrder());
         item.setPrice(itemDto.getPrice());

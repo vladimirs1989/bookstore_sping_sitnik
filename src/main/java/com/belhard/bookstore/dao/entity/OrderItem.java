@@ -32,11 +32,11 @@ public class OrderItem {
     private BigDecimal price;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
     public Long getId() {
