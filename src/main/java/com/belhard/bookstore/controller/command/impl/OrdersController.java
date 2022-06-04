@@ -29,7 +29,9 @@ import java.util.Map;
 @RequestMapping("/orders")
 public class OrdersController  {
 
+
     @Autowired
+    private static BookService bookService;
     private static OrderService orderService;
 
     @Autowired
@@ -61,9 +63,10 @@ public class OrdersController  {
     @ResponseStatus(HttpStatus.CREATED)
     public String create(Model model, @RequestParam Map<String, Object> params){
 
-            OrderItem orderItem = new OrderItem();
-            orderItem.setBook(orderItem.getBook());
-            orderItem.setPrice(new BigDecimal(params.get("price").toString()));
+            OrderItemDto orderItem = new OrderItemDto();
+            BookDto bookDto = bookService.getBookById(9L);
+            orderItem.setBook(bookDto);
+            orderItem.setPrice(bookDto.getPrice());
             orderItem.setQuantity(Integer.valueOf(params.get("quantity").toString()));
 
 
