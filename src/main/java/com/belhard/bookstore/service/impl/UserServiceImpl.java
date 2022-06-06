@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         return createdUserDto;
     }
 
-    private User toUser(UserDto userDto) {
+    public User toUser(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
         user.setLastName(userDto.getLastName());

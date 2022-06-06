@@ -1,13 +1,12 @@
 package com.belhard.bookstore.controller.command.impl;
 
-import com.belhard.bookstore.controller.command.Command;
-import com.belhard.bookstore.dao.entity.Book;
-import com.belhard.bookstore.dao.entity.OrderItem;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.OrderService;
+import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.BookDto;
 import com.belhard.bookstore.service.dto.OrderDto;
 import com.belhard.bookstore.service.dto.OrderItemDto;
+import com.belhard.bookstore.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,11 +32,14 @@ public class OrdersController  {
 
     @Autowired
     private static BookService bookService;
+    private static UserService userService;
     private static OrderService orderService;
 
     @Autowired
-    public OrdersController(OrderService orderService) {
+    public OrdersController(OrderService orderService, BookService bookService, UserService userService) {
         this.orderService = orderService;
+        this.bookService = bookService;
+        this.userService = userService;
     }
 
     @GetMapping("/order/{id}")
@@ -60,23 +63,27 @@ public class OrdersController  {
     }
 
     @PostMapping
+    @Transactional
     @ResponseStatus(HttpStatus.CREATED)
     public String create(Model model, @RequestParam Map<String, Object> params){
-
+        List<OrderItemDto> itemDtos = new ArrayList<>();
+       // for (OrderItemDto orderItem : itemDtos) {
             OrderItemDto orderItem = new OrderItemDto();
             BookDto bookDto = bookService.getBookById(9L);
-            orderItem.setBook(bookDto);
+            orderItem.setBookDto(bookDto);
             orderItem.setPrice(bookDto.getPrice());
-            orderItem.setQuantity(Integer.valueOf(params.get("quantity").toString()));
+            orderItem.setQuantity(2/*Integer.valueOf(params.get("quantity").toString())*/);
 
-
-
+            itemDtos.add(orderItem);
 
         OrderDto orderDto = new OrderDto();
-        orderDto.setUserDto(orderDto.getUserDto());
-        orderDto.setTotalCost(orderDto.getTotalCost());
+        UserDto userDto = userService.getUserById(2L);
+        orderDto.setUserDto(userDto) ;
+        orderDto.setTotalCost( new BigDecimal("20")/*orderDto.getTotalCost()*/);
         orderDto.setTimestamp(LocalDateTime.now());
         orderDto.setStatusDto(OrderDto.StatusDto.NOT_PAID);
+        orderDto.setItems(itemDtos);
+
 
         OrderDto created = orderService.createOrder(orderDto);
         model.addAttribute("order", created);

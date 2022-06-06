@@ -2,8 +2,10 @@ package com.belhard.bookstore.service.impl;
 
 import com.belhard.bookstore.dao.OrderDao;
 import com.belhard.bookstore.dao.OrderItemDao;
+import com.belhard.bookstore.dao.entity.Book;
 import com.belhard.bookstore.dao.entity.Order;
 import com.belhard.bookstore.dao.entity.OrderItem;
+import com.belhard.bookstore.dao.entity.User;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.OrderService;
 import com.belhard.bookstore.service.UserService;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("orderService")
-@Transactional
+
 public class OrderServiceImpl implements OrderService {
 
     private final OrderDao orderDao;
@@ -64,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
             itemDto.setPrice(item.getPrice());
             itemDto.setQuantity(item.getQuantity());
             BookDto bookDto = bookService.getBookById(item.getBook().getId());
-            itemDto.setBook(bookDto);
+            itemDto.setBookDto(bookDto);
             itemDtos.add(itemDto);
         }
         orderDto.setItems(itemDtos);
@@ -72,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderDto createOrder(OrderDto orderDto) {
         BigDecimal totalCost = calculateOrderCost(orderDto);
         orderDto.setTotalCost(totalCost);
@@ -79,10 +82,13 @@ public class OrderServiceImpl implements OrderService {
         Order entity = new Order();
         entity.setId(orderDto.getId());
         entity.setTotalCost(orderDto.getTotalCost());
-        entity.setUser(entity.getUser());
+        User user = toUser(orderDto.getUserDto());
+        entity.setUser(user);
         entity.setTimestamp(orderDto.getTimestamp());
-        entity.setStatus(entity.getStatus());
-        orderDao.updateOrder(entity);
+        entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
+
+        orderDao.createOrder(entity);
+
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
@@ -91,6 +97,34 @@ public class OrderServiceImpl implements OrderService {
         }
         return getOrderById(orderDto.getId());
     }
+
+    private Order OrderDtoToOrder(OrderDto orderDto) {
+
+        Order entity = new Order();
+
+        entity.setId(orderDto.getId());
+        entity.setTotalCost(orderDto.getTotalCost());
+        User user = toUser(orderDto.getUserDto());
+        entity.setUser(user);
+        entity.setTimestamp(orderDto.getTimestamp());
+        entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
+
+        return entity;
+    }
+
+    public User toUser(UserDto userDto) {
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setLastName(userDto.getLastName());
+        user.setFirstName(userDto.getFirstName());
+        user.setEmail(userDto.getEmail());
+        user.setLogin(userDto.getLogin());
+        user.setPassword(userDto.getPassword());
+        user.setAge(userDto.getAge());
+        user.setRole(User.Roles.valueOf(userDto.getRole().toString()));
+        return user;
+    }
+
 
     public List<OrderDto> getAllOrdersByUserId(Long id){
         UserDto userDto = userService.getUserById(id);
@@ -137,11 +171,24 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderItem mapToEntity(OrderItemDto itemDto) {
         OrderItem item = new OrderItem();
-        item.setOrder(item.getOrder());
+        item.setOrder(OrderDtoToOrder(itemDto.getOrderDto()));
         item.setPrice(itemDto.getPrice());
         item.setQuantity(itemDto.getQuantity());
-        item.setBook(item.getBook());
+        Book book = toBook(itemDto.getBookDto());
+        item.setBook(book);
         return item;
+    }
+
+    private Book toBook(BookDto bookDto) {
+        Book book = new Book();
+        book.setId(bookDto.getId());
+        book.setIsbn(bookDto.getIsbn());
+        book.setTitle(bookDto.getTitle());
+        book.setAuthor(bookDto.getAuthor());
+        book.setPages(bookDto.getPages());
+        book.setCover(Book.Cover.valueOf(bookDto.getCover().toString()));
+        book.setPrice(bookDto.getPrice());
+        return book;
     }
 
     @Override

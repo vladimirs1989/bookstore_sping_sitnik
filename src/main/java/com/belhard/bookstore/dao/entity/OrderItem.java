@@ -31,11 +31,11 @@ public class OrderItem {
     @Column(name = "price")
     private BigDecimal price;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
@@ -78,6 +78,8 @@ public class OrderItem {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

@@ -25,18 +25,19 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    /*@Column(name = "user_id")
-    private Long userId;*/
+
     @Column(name = "total_cost")
     private BigDecimal totalCost;
+
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
+
     @Column(name = "status")
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

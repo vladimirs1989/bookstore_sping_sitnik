@@ -32,14 +32,12 @@ public class OrderDaoItemJdbcImpl implements OrderItemDao {
     @Override
     public OrderItem getOrderItemById(Long id) {
         OrderItem orderItem = manager.find(OrderItem.class, id);
-        manager.clear();
         return orderItem;
     }
 
     @Override
     public OrderItem createOrderItem(OrderItem orderItem) {
         manager.persist(orderItem);
-        manager.clear();
         return orderItem;
     }
 
