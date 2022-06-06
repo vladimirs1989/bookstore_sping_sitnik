@@ -1,15 +1,47 @@
 package com.belhard.bookstore.dao.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "orders")
 public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-    private Long userId;
+
+    @Column(name = "total_cost")
     private BigDecimal totalCost;
+
+    @Column(name = "timestamp")
     private LocalDateTime timestamp;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.ORDINAL)
     private Status status;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<OrderItem> orderItems;
 
     public enum Status {
         CANCEL,
@@ -23,14 +55,6 @@ public class Order {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public BigDecimal getTotalCost() {
@@ -57,27 +81,44 @@ public class Order {
         this.status = status;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(userId, order.userId) && Objects.equals(totalCost, order.totalCost) && Objects.equals(timestamp, order.timestamp) && status == order.status;
+        return Objects.equals(id, order.id) && Objects.equals(totalCost, order.totalCost) && Objects.equals(timestamp, order.timestamp) && status == order.status && Objects.equals(user, order.user) && Objects.equals(orderItems, order.orderItems);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, totalCost, timestamp, status);
+        return Objects.hash(id, totalCost, timestamp, status, user, orderItems);
     }
 
     @Override
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", user_id=" + userId +
                 ", totalCost=" + totalCost +
                 ", timestamp=" + timestamp +
                 ", status=" + status +
+                ", user=" + user +
+                ", orderItems=" + orderItems +
                 '}';
     }
 }

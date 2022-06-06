@@ -9,10 +9,12 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service("userService")
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private UserDao userDao;
@@ -28,7 +30,6 @@ public class UserServiceImpl implements UserService {
     }*/
 
 
-
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Override
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    private UserDto toDto(User entity) {
+    public UserDto toDto(User entity) {
         UserDto dto = new UserDto();
         dto.setId(entity.getId());
         dto.setLastName(entity.getLastName());
@@ -84,17 +85,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         logger.debug("Start method service - createUser");
-        User existing = userDao.getUserByEmail(userDto.getEmail());
+        /*User existing = userDao.getUserByEmail(userDto.getEmail());
         if (existing != null) {
             throw new RuntimeException("User with Email: " + userDto.getEmail() + " exists");
-        }
+        }*/
         User newUser = toUser(userDto);
         User createdUser = userDao.createUser(newUser);
         UserDto createdUserDto = toDto(createdUser);
         return createdUserDto;
     }
 
-    private User toUser(UserDto userDto) {
+    public User toUser(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
         user.setLastName(userDto.getLastName());
@@ -110,10 +111,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(UserDto userDto) {
         logger.debug("Start method service - updateUser");
-        User existing = userDao.getUserByEmail(userDto.getEmail());
+        /*User existing = userDao.getUserByEmail(userDto.getEmail());
         if (existing != null && existing.getId() != userDto.getId()) {
             throw new RuntimeException("Book with Isbn exists");
-        }
+        }*/
         User newUser = toUser(userDto);
         User receivedUser = userDao.updateUser(newUser);
         UserDto updatedUserDto = toDto(receivedUser);
@@ -133,6 +134,4 @@ public class UserServiceImpl implements UserService {
         logger.debug("Start method service - countAllUsers");
         return userDao.countAllUsers();
     }
-
-
 }

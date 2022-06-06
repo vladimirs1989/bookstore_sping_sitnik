@@ -5,7 +5,6 @@ import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.dto.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,18 +92,18 @@ public class BooksController implements Command {
     public  String delete (Model model, @PathVariable Long id){
         bookService.deleteBook(id);
         model.addAttribute("message", "Book with id = " + id + " is deleted");
-        return "bookDelete";
+        return "delete";
     }
 
     @GetMapping("/edit/{id}")
     public  String editForm (Model model, @PathVariable Long id){
         BookDto bookDto = bookService.getBookById(id);
         model.addAttribute("book", bookDto);
-        return "updateBook";
+        return "bookUpdate";
     }
 
     @GetMapping("/create")
     public String createForm(){
-        return "createBook";
+        return "bookCreate";
     }
 }

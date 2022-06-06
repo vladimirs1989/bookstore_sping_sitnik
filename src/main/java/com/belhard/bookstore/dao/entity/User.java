@@ -1,16 +1,50 @@
 package com.belhard.bookstore.dao.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "lastname")
     private String lastName;
+
+    @Column(name = "firstname")
     private String firstName;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "login")
     private String login;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "age")
     private Integer age;
+
+    @Column(name = "roles")
+    @Enumerated(EnumType.ORDINAL)
     private Roles role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
     public enum Roles{
         ADMIN,
@@ -80,6 +114,14 @@ public class User {
 
     public void setRole(Roles role) {
         this.role = role;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     @Override

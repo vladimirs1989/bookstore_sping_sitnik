@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Book</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../../css/style.css">
 </head>
 <body>
 <form action="/books/${book.id}" method="post">

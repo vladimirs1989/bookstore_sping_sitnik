@@ -1,17 +1,49 @@
 package com.belhard.bookstore.dao.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
-public class Book {
 
+@Entity
+@Table(name = "books")
+public class Book {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "isbn")
     private String isbn;
+
+    @Column(name = "title")
     private String title;
+
+    @Column(name = "author")
     private String author;
+
+    @Column(name = " pages")
     private Integer pages;
+
+    @Column(name = "cover")
+    @Enumerated(EnumType.ORDINAL)
     private Cover cover;
+
+    @Column(name = "price")
     private BigDecimal price;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<OrderItem> orderItems;
 
     public enum Cover{
         SOFT,
