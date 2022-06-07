@@ -6,6 +6,7 @@ import com.belhard.bookstore.dao.entity.Book;
 import com.belhard.bookstore.dao.entity.Order;
 import com.belhard.bookstore.dao.entity.OrderItem;
 import com.belhard.bookstore.dao.entity.User;
+import com.belhard.bookstore.dao.repository.OrderRepository;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.OrderService;
 import com.belhard.bookstore.service.UserService;
@@ -14,17 +15,27 @@ import com.belhard.bookstore.service.dto.OrderDto;
 import com.belhard.bookstore.service.dto.OrderItemDto;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("orderService")
 
 public class OrderServiceImpl implements OrderService {
+
+    private OrderRepository orderRepository;
+
+    @Autowired
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     private final OrderDao orderDao;
     private final OrderItemDao orderItemDao;
@@ -41,13 +52,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderDto> getAllOrders() {
+        Iterable <Order> orders = orderRepository.findAll(PageRequest.of(0, 2, Sort.Direction.ASC, "id"));
+        List<Order> orderList = new ArrayList<>();
+        orders.forEach(orderList::add);
         return orderDao.getAllOrders().stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
     public OrderDto getOrderById(Long id) {
-        Order order = orderDao.getOrderById(id);
-        return mapToDto(order);
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        if (orderOptional.isEmpty()) {
+            throw new RuntimeException("No book with id: " + id);
+        }
+        return mapToDto(orderOptional.get());
     }
 
     private OrderDto mapToDto(Order order) {
@@ -79,22 +96,25 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalCost = calculateOrderCost(orderDto);
         orderDto.setTotalCost(totalCost);
 
-        Order entity = new Order();
-        entity.setId(orderDto.getId());
-        entity.setTotalCost(orderDto.getTotalCost());
-        User user = toUser(orderDto.getUserDto());
-        entity.setUser(user);
-        entity.setTimestamp(orderDto.getTimestamp());
-        entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
+        Order order = new Order();
+        order.setId(orderDto.getId());
+        order.setTotalCost(orderDto.getTotalCost());
+        UserDto userDto = userService.getUserById(orderDto.getUserDto().getId());
+        order.setUser(toUser(userDto));
+        order.setTimestamp(orderDto.getTimestamp());
+        order.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
+        orderDao.createOrder(order);
 
-        orderDao.createOrder(entity);
-
+        List<OrderItem> items = orderItemDao.getByOrderItemId(orderDto.getId());
+        for (OrderItem item : items) {
+            orderItemDao.deleteOrderItem(item.getId());
+        }
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
-            OrderItem item = mapToEntity( itemDto);
+          OrderItem item = mapToEntity( itemDto);
             orderItemDao.createOrderItem(item);
-        }
+      }
         return getOrderById(orderDto.getId());
     }
 
@@ -125,25 +145,19 @@ public class OrderServiceImpl implements OrderService {
         return user;
     }
 
-
-    public List<OrderDto> getAllOrdersByUserId(Long id){
-        UserDto userDto = userService.getUserById(id);
-        List<OrderDto> orderDtos = getAllOrders();
-        return  orderDtos.stream().filter(od->od.getUserDto().getId() == id).collect(Collectors.toList());
-    }
-
     @Override
     public OrderDto updateOrder(OrderDto orderDto) {
         BigDecimal totalCost = calculateOrderCost(orderDto);
         orderDto.setTotalCost(totalCost);
 
-        Order entity = new Order();
-        entity.setId(orderDto.getId());
-        entity.setTotalCost(orderDto.getTotalCost());
-        entity.setUser(entity.getUser());
-        entity.setTimestamp(orderDto.getTimestamp());
-        entity.setStatus(entity.getStatus());
-        orderDao.updateOrder(entity);
+        Order order = new Order();
+        order.setId(orderDto.getId());
+        order.setTotalCost(orderDto.getTotalCost());
+        UserDto userDto = userService.getUserById(orderDto.getUserDto().getId());
+        order.setUser(toUser(userDto));
+        order.setTimestamp(orderDto.getTimestamp());
+        order.setStatus(order.getStatus());
+        orderDao.updateOrder(order);
 
         List<OrderItem> items = orderItemDao.getByOrderItemId(orderDto.getId());
         for (OrderItem item : items) {

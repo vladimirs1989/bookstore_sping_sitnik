@@ -1,5 +1,6 @@
 package com.belhard.bookstore.controller.command.impl;
 
+import com.belhard.bookstore.dao.entity.Order;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.OrderService;
 import com.belhard.bookstore.service.UserService;
@@ -90,33 +91,34 @@ public class OrdersController  {
         return "order";
     }
 
-//    @PostMapping("/{id}")
-//    public String update(Model model, @PathVariable Long id, @RequestParam Map<String, Object> params){
-//        BookDto bookDto = bookService.getBookById(id);
+    @PostMapping("/{id}")
+    public String update(Model model, @PathVariable Long id, @RequestParam Map<String, Object> params){
+        OrderDto orderDto = orderService.getOrderById(id);
+
 //        bookDto.setIsbn(params.get("isbn").toString());
 //        bookDto.setTitle(params.get("title").toString());
 //        bookDto.setAuthor(params.get("author").toString());
 //        bookDto.setPages(Integer.valueOf(params.get("pages").toString()));
 //        bookDto.setCover(BookDto.CoverDto.valueOf(params.get("cover").toString()));
 //        bookDto.setPrice( new BigDecimal (params.get("price").toString()));
-//        BookDto updated = bookService.updateBook(bookDto);
-//        model.addAttribute("book", updated);
-//        return "book";
-//    }
-//
+        OrderDto updated = orderService.updateOrder(orderDto);
+        model.addAttribute("order", updated);
+        return "order";
+    }
+
 //    @PostMapping("/delete/{id}")
 //    public  String delete (Model model, @PathVariable Long id){
 //        bookService.deleteBook(id);
 //        model.addAttribute("message", "Book with id = " + id + " is deleted");
 //        return "delete";
 //    }
-//
-//    @GetMapping("/edit/{id}")
-//    public  String editForm (Model model, @PathVariable Long id){
-//        BookDto bookDto = bookService.getBookById(id);
-//        model.addAttribute("book", bookDto);
-//        return "bookUpdate";
-//    }
+
+    @GetMapping("/edit/{id}")
+    public  String editForm (Model model, @PathVariable Long id){
+        OrderDto orderDto = orderService.getOrderById(id);
+        model.addAttribute("book", orderDto);
+        return "orderUpdate";
+    }
 
     @GetMapping("/create")
     public String createForm(){

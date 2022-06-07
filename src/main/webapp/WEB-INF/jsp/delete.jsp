@@ -10,6 +10,7 @@
         <ul>
             <li><a href="/books">All books</a> </li>
             <li><a href="/users">All users</a> </li>
+            <li><a href="/orders">All users</a> </li>
         </ul>
 </body>
 </html>

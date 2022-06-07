@@ -32,7 +32,7 @@ public class Book {
     @Column(name = "author")
     private String author;
 
-    @Column(name = " pages")
+    @Column(name = "pages")
     private Integer pages;
 
     @Column(name = "cover")
@@ -44,6 +44,7 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
+
 
     public enum Cover{
         SOFT,

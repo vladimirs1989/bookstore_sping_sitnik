@@ -11,7 +11,7 @@
         <div>Date: ${order.timestamp}</div>
         <div>Status: ${order.statusDto.toString().toLowerCase()}</div>
         <ul>
-            <li><a href="/orders">All books</a> </li>
+            <li><a href="/orders">All orders</a> </li>
         </ul>
 </body>
 </html>
