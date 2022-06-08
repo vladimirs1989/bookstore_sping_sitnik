@@ -54,7 +54,7 @@ public class BooksController implements Command {
 
     @GetMapping
     public String execute(Model model) {
-        List<BookDto> books = bookService.getAllBooks();
+        List<BookDto> books = bookService.getAllBooks(0, 25);
         model.addAttribute("books", books);
         return "books";
     }

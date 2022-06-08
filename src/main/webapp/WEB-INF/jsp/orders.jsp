@@ -25,10 +25,10 @@
         <td>${order.timestamp}</td>
         <td>${order.statusDto.toString().toLowerCase()}</td>
         <td>
-            <form action="/orders/edit/${order.userDto.id}" method="get"><input type = "submit" value = "Edit"></form>
+            <form action="/orders/edit/${order.id}" method="get"><input type = "submit" value = "Edit"></form>
         </td>
         <td>
-            <form action="/orders/delete/${order.userDto.id}" method="post"><input type = "submit" value = "Delete"></form>
+            <form action="/orders/delete/${order.id}" method="post"><input type = "submit" value = "Delete"></form>
         </td>
     </tr>
     </c:forEach>

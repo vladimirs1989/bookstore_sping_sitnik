@@ -30,8 +30,6 @@ import java.util.Map;
 @RequestMapping("/orders")
 public class OrdersController  {
 
-
-    @Autowired
     private static BookService bookService;
     private static UserService userService;
     private static OrderService orderService;
@@ -106,17 +104,17 @@ public class OrdersController  {
         return "order";
     }
 
-//    @PostMapping("/delete/{id}")
-//    public  String delete (Model model, @PathVariable Long id){
-//        bookService.deleteBook(id);
-//        model.addAttribute("message", "Book with id = " + id + " is deleted");
-//        return "delete";
-//    }
+    @PostMapping("/delete/{id}")
+    public  String delete (Model model, @PathVariable Long id){
+        bookService.deleteBook(id);
+        model.addAttribute("message", "Order with id = " + id + " is deleted");
+        return "delete";
+    }
 
     @GetMapping("/edit/{id}")
     public  String editForm (Model model, @PathVariable Long id){
         OrderDto orderDto = orderService.getOrderById(id);
-        model.addAttribute("book", orderDto);
+        model.addAttribute("order", orderDto);
         return "orderUpdate";
     }
 

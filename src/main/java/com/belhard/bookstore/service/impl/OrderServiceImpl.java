@@ -45,17 +45,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderRepository orderRepository;
+    private OrderItemRepository orderItemRepository;
 
     @Autowired
     public void setOrderRepository(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
+    @Autowired
+    public void setOrderItemRepository(OrderItemRepository orderItemRepository) {
+        this.orderItemRepository = orderItemRepository;
+    }
+
     @Override
     public List<OrderDto> getAllOrders() {
         //return orderDao.getAllOrders().stream().map(this::mapToDto).collect(Collectors.toList());
 
-        Iterable<Order> orders = orderRepository.findAll(PageRequest.of(0, 3, Sort.Direction.ASC, "id"));
+        Iterable<Order> orders = orderRepository.findAll(PageRequest.of(0, 20, Sort.Direction.ASC, "id"));
         List<Order> orderList = new ArrayList<>();
         orders.forEach(orderList::add);
         return orderList.stream().map(entity -> mapToDto(entity))
@@ -82,7 +88,8 @@ public class OrderServiceImpl implements OrderService {
         orderDto.setStatusDto(OrderDto.StatusDto.valueOf(order.getStatus().toString()));
         UserDto userDto = userService.getUserById(order.getUser().getId());
         orderDto.setUserDto(userDto);
-        List<OrderItem> items = orderItemDao.getByOrderId(order.getId());
+        //List<OrderItem> items = orderItemDao.getByOrderId(order.getId());
+        List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
         List<OrderItemDto> itemDtos = new ArrayList<>();
         for (OrderItem item : items) {
             OrderItemDto itemDto = new OrderItemDto();
@@ -110,8 +117,7 @@ public class OrderServiceImpl implements OrderService {
         entity.setUser(user);
         entity.setTimestamp(orderDto.getTimestamp());
         entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
-        //orderDao.createOrder(entity);
-orderRepository.save(entity);
+        orderRepository.save(entity);
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
@@ -121,32 +127,13 @@ orderRepository.save(entity);
             item.setBook(book);
             item.setQuantity(itemDto.getQuantity());
             item.setPrice(itemDto.getPrice());
-            orderItemDao.createOrderItem(item);
+            //orderItemDao.createOrderItem(item);
+            orderItemRepository.save(item);
         }
         return getOrderById(entity.getId());
-        /*BigDecimal totalCost = calculateOrderCost(orderDto);
-        orderDto.setTotalCost(totalCost);
-
-        Order order = new Order();
-        order.setId(orderDto.getId());
-        order.setTotalCost(orderDto.getTotalCost());
-        User user = toUser(orderDto.getUserDto());
-        order.setUser(user);
-        order.setTimestamp(orderDto.getTimestamp());
-        order.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
-
-        orderDao.createOrder(order);
-
-
-        List<OrderItemDto> itemDtos = orderDto.getItems();
-        for (OrderItemDto itemDto : itemDtos) {
-            OrderItem item = mapToEntity( itemDto);
-            orderItemDao.createOrderItem(item);
-        }
-        return getOrderById(orderDto.getId());*/
     }
 
-    private Order OrderDtoToOrder(OrderDto orderDto) {
+/*    private Order OrderDtoToOrder(OrderDto orderDto) {
 
         Order entity = new Order();
 
@@ -158,9 +145,9 @@ orderRepository.save(entity);
         entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
 
         return entity;
-    }
+    }*/
 
-    public User toUser(UserDto userDto) {
+    private User toUser(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
         user.setLastName(userDto.getLastName());
@@ -192,11 +179,14 @@ orderRepository.save(entity);
         entity.setUser(user);
         entity.setTimestamp(orderDto.getTimestamp());
         entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
-        orderDao.updateOrder(entity);
+        //orderDao.updateOrder(entity);
+        orderRepository.save(entity);
 
-        List<OrderItem> items = orderItemDao.getByOrderId(orderDto.getId());
+        //List<OrderItem> items = orderItemDao.getByOrderId(orderDto.getId());
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderDto.getId());
         for (OrderItem item : items) {
-            orderItemDao.deleteOrderItem(item.getId());
+            //orderItemDao.deleteOrderItem(item.getId());
+            orderItemRepository.delete(item);
         }
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
@@ -207,9 +197,10 @@ orderRepository.save(entity);
             item.setBook(book);
             item.setQuantity(itemDto.getQuantity());
             item.setPrice(itemDto.getPrice());
-            orderItemDao.createOrderItem(item);
+            //orderItemDao.createOrderItem(item);
+            orderItemRepository.save(item);
         }
-        return getOrderById(orderDto.getId());
+        return getOrderById(entity.getId());
 
     }
 
@@ -223,16 +214,15 @@ orderRepository.save(entity);
         return totalCost;
     }
 
-    private OrderItem mapToEntity(OrderItemDto itemDto) {
+/*    private OrderItem mapToEntity(OrderItemDto itemDto) {
         OrderItem item = new OrderItem();
-
         item.setOrder(orderDao.getOrderById(item.getOrder().getId()));
         item.setPrice(itemDto.getPrice());
         item.setQuantity(itemDto.getQuantity());
         Book book = toBook(itemDto.getBookDto());
         item.setBook(book);
         return item;
-    }
+    }*/
 
     private Book toBook(BookDto bookDto) {
         Book book = new Book();
@@ -248,9 +238,12 @@ orderRepository.save(entity);
 
     @Override
     public void deleteOrder(Long id) {
-        List<OrderItem> items = orderItemDao.getByOrderId(id);
+        //List<OrderItem> items = orderItemDao.getByOrderId(id);
+        List<OrderItem> items = orderItemRepository.findByOrderId(id);
         items.forEach(i -> {
-            orderItemDao.deleteOrderItem(i.getId());
+            //orderItemDao.deleteOrderItem(i.getId());
+            orderItemRepository.delete(i);
         });
+        orderRepository.delOrder(id);
     }
 }

@@ -31,9 +31,9 @@ public class BookServiceImpl implements BookService {
     private static final Logger logger = LogManager.getLogger(BookServiceImpl.class);
 
     @Override
-    public List<BookDto> getAllBooks() {
+    public List<BookDto> getAllBooks(int page, int size) {
         logger.debug("Start method service - getAllBooks");
-        Iterable<Book> books = bookRepository.findAll(PageRequest.of(0, 10, Sort.Direction.ASC, "title", "author"));
+        Iterable<Book> books = bookRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "title", "author"));
         List<Book> bookList = new ArrayList<>();
         books.forEach(bookList::add);
         return bookList.stream().map(entity -> toDto(entity))
