@@ -55,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> getAllOrders() {
         //return orderDao.getAllOrders().stream().map(this::mapToDto).collect(Collectors.toList());
 
-        Iterable<Order> orders = orderRepository.findAll(PageRequest.of(0, 10, Sort.Direction.ASC, "id"));
+        Iterable<Order> orders = orderRepository.findAll(PageRequest.of(0, 3, Sort.Direction.ASC, "id"));
         List<Order> orderList = new ArrayList<>();
         orders.forEach(orderList::add);
         return orderList.stream().map(entity -> mapToDto(entity))
@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public OrderDto createOrder(OrderDto orderDto) {
         BigDecimal totalCost = calculateOrderCost(orderDto);
         orderDto.setTotalCost(totalCost);
@@ -109,9 +109,9 @@ public class OrderServiceImpl implements OrderService {
         User user = toUser(orderDto.getUserDto());
         entity.setUser(user);
         entity.setTimestamp(orderDto.getTimestamp());
-        entity.setStatus(entity.getStatus());
-        orderDao.createOrder(entity);
-
+        entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
+        //orderDao.createOrder(entity);
+orderRepository.save(entity);
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
@@ -191,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
         User user = toUser(orderDto.getUserDto());
         entity.setUser(user);
         entity.setTimestamp(orderDto.getTimestamp());
-        entity.setStatus(entity.getStatus());
+        entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
         orderDao.updateOrder(entity);
 
         List<OrderItem> items = orderItemDao.getByOrderId(orderDto.getId());
