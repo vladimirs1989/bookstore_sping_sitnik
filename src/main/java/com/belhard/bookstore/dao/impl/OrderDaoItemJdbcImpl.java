@@ -24,7 +24,7 @@ public class OrderDaoItemJdbcImpl implements OrderItemDao {
     }
 
     @Override
-    public List<OrderItem> getByOrderItemId(Long id) {
+    public List<OrderItem> getByOrderId(Long id) {
         List<OrderItem> orderItems = manager.createQuery("from OrderItem where order_id =?1", OrderItem.class).setParameter(1, id).getResultList();
         return orderItems;
     }
