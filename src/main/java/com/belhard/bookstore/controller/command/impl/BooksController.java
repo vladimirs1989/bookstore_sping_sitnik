@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/books")
-public class BooksController implements Command {
+public class BooksController {
 
     @Autowired
     private static BookService bookService;
@@ -53,8 +53,8 @@ public class BooksController implements Command {
     }
 
     @GetMapping
-    public String execute(Model model) {
-        List<BookDto> books = bookService.getAllBooks(0, 25);
+    public String execute(Model model, Integer page, Integer size) {
+        List<BookDto> books = bookService.getAllBooks(page, size);
         model.addAttribute("books", books);
         return "books";
     }

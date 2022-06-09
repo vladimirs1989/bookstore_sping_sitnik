@@ -38,22 +38,24 @@
     </c:forEach>
 </table>
 
-
-<!--    <li class="page-item disabled">-->
-<!--        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>-->
-<!--    </li>-->
-<!--    <li class="page-item"><a class="page-link" href="#">1</a></li>-->
-<!--    <li class="page-item active" aria-current="page">-->
-<!--        <a class="page-link" href="#">2</a>-->
-<!--    </li>-->
-<!--    <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-<!--    <li class="page-item">-->
-<!--        <a class="page-link" href="#">Next</a>-->
-<!--    </li>-->
-
-
-
-
 <div> <form action="/books/create" method="get"><input type = "submit" value = "Create book"></form></div>
+
+
+<div>  <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item active" aria-current="page">
+        <a class="page-link" href="/books?page=1&size=10">2</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="/books?page=2&size=10">3</a></li>
+    <li class="page-item">
+        <a class="page-link" href="/books?page=1&size=10">Next</a>
+    </li>
+</div>
+
+
+
+
 </body>
 </html>
