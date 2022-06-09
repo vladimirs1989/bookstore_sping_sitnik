@@ -123,7 +123,8 @@ CREATE TABLE IF NOT EXISTS orders(
     user_id BIGSERIAL REFERENCES users,
     total_cost DECIMAL (6,2) DEFAULT 0.0 NOT NULL,
     timestamp DATE NOT NULL,
-    status INTEGER
+    status INTEGER,
+    deleted BOOLEAN DEFAULT false NOT NULL
 );
 
 /*
@@ -137,11 +138,11 @@ VALUES ('CANCEL'),
        ('NOT_PAID');
 
 INSERT INTO orders (user_id, total_cost, timestamp, status)
-VALUES ('5', 179.29, '2021-12-02', 0),
+VALUES ('5', 179.29, '2021-12-02', 2),
        ('8', 175.25, '2022-01-12', 1),
        ('9', 105.00, '2022-03-15', 2),
-       ('1', 13.00, '2022-04-08', 0),
-       ('12', 63.46, '2022-05-11', 1);
+       ('1', 13.00, '2022-04-08', 1),
+       ('12', 63.46, '2022-05-11', 0);
 
 /*
 DROP TABLE IF EXISTS order_items;

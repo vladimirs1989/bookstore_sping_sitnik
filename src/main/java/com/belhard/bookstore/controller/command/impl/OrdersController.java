@@ -89,10 +89,28 @@ public class OrdersController  {
         return "order";
     }
 
+
     @PostMapping("/{id}")
+    @Transactional
     public String update(Model model, @PathVariable Long id, @RequestParam Map<String, Object> params){
         OrderDto orderDto = orderService.getOrderById(id);
+        List<OrderItemDto> itemDtos = new ArrayList<>();
+        // for (OrderItemDto orderItem : itemDtos) {
+        OrderItemDto orderItem = new OrderItemDto();
+        BookDto bookDto = bookService.getBookById(5L);
+        orderItem.setBookDto(bookDto);
+        orderItem.setPrice(bookDto.getPrice());
+        orderItem.setQuantity(2/*Integer.valueOf(params.get("quantity").toString())*/);
 
+        itemDtos.add(orderItem);
+
+       // OrderDto orderDto = new OrderDto();
+        UserDto userDto = userService.getUserById(3L);
+        orderDto.setUserDto(userDto) ;
+        orderDto.setTotalCost( new BigDecimal("25")/*orderDto.getTotalCost()*/);
+        orderDto.setTimestamp(LocalDateTime.now());
+        orderDto.setStatusDto(OrderDto.StatusDto.PAID);
+        orderDto.setItems(itemDtos);
 //        bookDto.setIsbn(params.get("isbn").toString());
 //        bookDto.setTitle(params.get("title").toString());
 //        bookDto.setAuthor(params.get("author").toString());
@@ -106,7 +124,7 @@ public class OrdersController  {
 
     @PostMapping("/delete/{id}")
     public  String delete (Model model, @PathVariable Long id){
-        bookService.deleteBook(id);
+        orderService.deleteOrder(id);
         model.addAttribute("message", "Order with id = " + id + " is deleted");
         return "delete";
     }

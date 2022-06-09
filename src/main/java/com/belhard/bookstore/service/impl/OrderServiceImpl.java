@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> getAllOrders() {
         //return orderDao.getAllOrders().stream().map(this::mapToDto).collect(Collectors.toList());
 
-        Iterable<Order> orders = orderRepository.findAll(PageRequest.of(0, 20, Sort.Direction.ASC, "id"));
+        Iterable<Order> orders = orderRepository.findAllOrder(PageRequest.of(0, 20, Sort.Direction.ASC, "id"));
         List<Order> orderList = new ArrayList<>();
         orders.forEach(orderList::add);
         return orderList.stream().map(entity -> mapToDto(entity))
@@ -128,6 +128,7 @@ public class OrderServiceImpl implements OrderService {
             item.setQuantity(itemDto.getQuantity());
             item.setPrice(itemDto.getPrice());
             //orderItemDao.createOrderItem(item);
+
             orderItemRepository.save(item);
         }
         return getOrderById(entity.getId());
@@ -168,6 +169,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    //@Transactional
     public OrderDto updateOrder(OrderDto orderDto) {
         BigDecimal totalCost = calculateOrderCost(orderDto);
         orderDto.setTotalCost(totalCost);
@@ -189,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
             orderItemRepository.delete(item);
         }
 
-        List<OrderItemDto> itemDtos = orderDto.getItems();
+        List<OrderItemDto> itemDtos = new ArrayList<>()/*orderDto.getItems()*/;
         for (OrderItemDto itemDto : itemDtos) {
             OrderItem item = new OrderItem();
             item.setOrder(entity);
@@ -198,9 +200,10 @@ public class OrderServiceImpl implements OrderService {
             item.setQuantity(itemDto.getQuantity());
             item.setPrice(itemDto.getPrice());
             //orderItemDao.createOrderItem(item);
-            orderItemRepository.save(item);
+            orderItemRepository.save(item); /*это не удалять!!!*/
+
         }
-        return getOrderById(entity.getId());
+        return getOrderById(orderDto.getId());
 
     }
 
@@ -237,6 +240,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void deleteOrder(Long id) {
         //List<OrderItem> items = orderItemDao.getByOrderId(id);
         List<OrderItem> items = orderItemRepository.findByOrderId(id);

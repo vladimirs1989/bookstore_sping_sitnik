@@ -31,9 +31,9 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Override
-    public List<UserDto> getAllUser() {
+    public List<UserDto> getAllUser(int page, int size) {
         logger.debug("Start method service - getAllUser");
-        Iterable<User> users = userRepository.findAll(PageRequest.of(0, 10, Sort.Direction.ASC, "lastName", "firstName"));
+        Iterable<User> users = userRepository.findAllUsers(PageRequest.of(page, size, Sort.Direction.ASC, "lastName", "firstName"));
         List<User> userList = new ArrayList<>();
         users.forEach(userList::add);
         return userList.stream().map(entity -> toDto(entity))

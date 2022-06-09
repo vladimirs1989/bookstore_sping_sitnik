@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getAllBooks(int page, int size) {
         logger.debug("Start method service - getAllBooks");
-        Iterable<Book> books = bookRepository.findAll(PageRequest.of(page, size, Sort.Direction.ASC, "title", "author"));
+        Iterable<Book> books = bookRepository.findAllBook(PageRequest.of(page, size, Sort.Direction.ASC, "title", "author"));
         List<Book> bookList = new ArrayList<>();
         books.forEach(bookList::add);
         return bookList.stream().map(entity -> toDto(entity))
@@ -75,7 +75,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookDto> getBooksByAuthor(String author) {
         logger.debug("Start method service - getBooksByAuthor");
-        List<Book> books = bookRepository.findBookByAuthor(author);
+        List<Book> books = bookRepository.findBookByAuthor(author, PageRequest.of(0, 10, Sort.Direction.ASC,  "author","title"));
         return books.stream().map(entity -> toDto(entity))
                 .collect(Collectors.toList());
     }
@@ -121,7 +121,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteBook(Long id) {
         logger.debug("Start method service - deleteBook");
-        bookRepository.delBook(id);
+        bookRepository.deleteBook(id);
     }
 
     @Override

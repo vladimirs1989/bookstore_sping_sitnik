@@ -7,21 +7,31 @@
 </head>
 <body>
 <h1>Order, id = ${order.id}</h1>
-        <div>User: ${order.userDto.lastName}</div>
+        <div>User Last name: ${order.userDto.lastName}</div>
         <div>TotalCost: ${order.totalCost}</div>
         <div>Date: ${order.timestamp}</div>
         <div>Status: ${order.statusDto.toString().toLowerCase()}</div>
-<!--       <c:forEach items="${orderItems}" var="orderItem">
+<h2>Items: </h2>
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Book Title</th>
+        <th>Book Author</th>
+        <th>Quantity</th>
+        <th>Price</th>
+    </tr>
+       <c:forEach items="${order.items}" var="orderI">
                <tr>
-               <td>${orderItem.id}</td>
-               <td>${orderItem.bookDto.id}</td>
-               <td>${orderItem.quantity}</td>
-               <td>${orderItem.price}</td>
+               <td>${orderI.id}</td>
+                   <td>${orderI.bookDto.title}</td>
+                   <td>${orderI.bookDto.author}</td>
+               <td>${orderI.quantity}</td>
+               <td>${orderI.price}</td>
                </tr>
-           </c:forEach>-->
+           </c:forEach>
+</table>
 
-        <ul>
             <li><a href="/orders">All orders</a> </li>
-        </ul>
+
 </body>
 </html>
