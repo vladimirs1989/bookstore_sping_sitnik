@@ -191,7 +191,7 @@ public class OrderServiceImpl implements OrderService {
             orderItemRepository.delete(item);
         }
 
-        List<OrderItemDto> itemDtos = new ArrayList<>()/*orderDto.getItems()*/;
+        List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
             OrderItem item = new OrderItem();
             item.setOrder(entity);
@@ -200,9 +200,11 @@ public class OrderServiceImpl implements OrderService {
             item.setQuantity(itemDto.getQuantity());
             item.setPrice(itemDto.getPrice());
             //orderItemDao.createOrderItem(item);
-            orderItemRepository.save(item); /*это не удалять!!!*/
+            //orderItemRepository.save(item); /*это не удалять!!! но тут ошибка*/
 
         }
+        //orderDto.setItems(itemDtos);
+        //orderRepository.save(entity);
         return getOrderById(orderDto.getId());
 
     }
