@@ -58,10 +58,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> getAllOrders() {
+    public List<OrderDto> getAllOrders(int page, int size) {
         //return orderDao.getAllOrders().stream().map(this::mapToDto).collect(Collectors.toList());
 
-        Iterable<Order> orders = orderRepository.findAllOrder(PageRequest.of(0, 20, Sort.Direction.ASC, "id"));
+        Iterable<Order> orders = orderRepository.findAllOrder(PageRequest.of(page, size, Sort.Direction.ASC, "id"));
         List<Order> orderList = new ArrayList<>();
         orders.forEach(orderList::add);
         return orderList.stream().map(entity -> mapToDto(entity))
@@ -72,7 +72,6 @@ public class OrderServiceImpl implements OrderService {
     public OrderDto getOrderById(Long id) {
 //        Order order = orderDao.getOrderById(id);
 //        return mapToDto(order);
-
         Optional<Order> orderOptional = orderRepository.findById(id);
         if (orderOptional.isEmpty()) {
             throw new RuntimeException("No order with id: " + id);
@@ -164,7 +163,7 @@ public class OrderServiceImpl implements OrderService {
 
     public List<OrderDto> getAllOrdersByUserId(Long id){
         UserDto userDto = userService.getUserById(id);
-        List<OrderDto> orderDtos = getAllOrders();
+        List<OrderDto> orderDtos = getAllOrders(0,10);
         return  orderDtos.stream().filter(od->od.getUserDto().getId() == id).collect(Collectors.toList());
     }
 
@@ -200,7 +199,7 @@ public class OrderServiceImpl implements OrderService {
             item.setQuantity(itemDto.getQuantity());
             item.setPrice(itemDto.getPrice());
             //orderItemDao.createOrderItem(item);
-            //orderItemRepository.save(item); /*это не удалять!!! но тут ошибка*/
+            //orderItemRepository.save(item); /*это не надо!!! но не создает*/
 
         }
         //orderDto.setItems(itemDtos);

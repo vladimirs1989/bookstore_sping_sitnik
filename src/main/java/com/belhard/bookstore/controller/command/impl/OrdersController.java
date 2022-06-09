@@ -56,7 +56,7 @@ public class OrdersController  {
 
     @GetMapping
     public String execute(Model model) {
-        List<OrderDto> orders = orderService.getAllOrders();
+        List<OrderDto> orders = orderService.getAllOrders(0,10);
         model.addAttribute("orders", orders);
         return "orders";
     }

@@ -93,7 +93,7 @@ public class BookServiceImpl implements BookService {
         return createdBookDto;
     }
 
-    private Book toBook(BookDto bookDto) {
+    public Book toBook(BookDto bookDto) {
         Book book = new Book();
         book.setId(bookDto.getId());
         book.setIsbn(bookDto.getIsbn());
