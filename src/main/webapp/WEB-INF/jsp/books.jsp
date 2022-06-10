@@ -39,22 +39,32 @@
 </table>
 
 <div> <form action="/books/create" method="get"><input type = "submit" value = "Create book"></form></div>
+<c:if test="${page.getPageNumber() == 0}">
+<div>
 
 
-<div>  <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <!--<li class="page-item"><a class="page-link" href="#">1</a></li>
     <li class="page-item active" aria-current="page">
-        <a class="page-link" href="/books?page=1&size=10">2</a>
+        <a class="page-link" href="/books?page=1&size=5">2</a>
     </li>
-    <li class="page-item"><a class="page-link" href="/books?page=2&size=10">3</a></li>
-    <li class="page-item">
-        <a class="page-link" href="/books?page=1&size=10">Next</a>
-    </li>
+    <li class="page-item"><a class="page-link" href="/books?page=2&size=5">3</a></li>-->
+
+        <a class="page-link" href="/books?page=${page.getPageNumber()+1}&size=5">Next page</a>
 </div>
+</c:if>
+<c:if test="${page.getPageNumber()!=0 }">
+    <div>
+        <a class="page-link" href="/books?page=${page.getPageNumber()-1}&size=5" >Previous page</a>
 
+        <!--<li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="/books?page=1&size=5">2</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="/books?page=2&size=5">3</a></li>-->
 
+        <a class="page-link" href="/books?page=${page.getPageNumber()+1}&size=5">Next page</a>
+    </div>
+</c:if>
 
 
 </body>

@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +32,9 @@ public class BookServiceImpl implements BookService {
     private static final Logger logger = LogManager.getLogger(BookServiceImpl.class);
 
     @Override
-    public List<BookDto> getAllBooks(int page, int size) {
+    public List<BookDto> getAllBooks(Pageable pageable) {
         logger.debug("Start method service - getAllBooks");
-        Iterable<Book> books = bookRepository.findAllBook(PageRequest.of(page, size, Sort.Direction.ASC, "title", "author"));
+        Iterable<Book> books = bookRepository.findAllBook(pageable);
         List<Book> bookList = new ArrayList<>();
         books.forEach(bookList::add);
         return bookList.stream().map(entity -> toDto(entity))

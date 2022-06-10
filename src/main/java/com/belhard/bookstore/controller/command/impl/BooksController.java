@@ -4,6 +4,9 @@ import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.dto.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -53,9 +56,10 @@ public class BooksController {
     }
 
     @GetMapping
-    public String execute(Model model, Integer page, Integer size) {
-        List<BookDto> books = bookService.getAllBooks(page, size);
+    public String execute(Model model, @PageableDefault(sort = {"author"}, direction =  Sort.Direction.ASC) Pageable pageable) {
+        List<BookDto> books = bookService.getAllBooks(pageable);
         model.addAttribute("books", books);
+        model.addAttribute("page", pageable);
         return "books";
     }
 
