@@ -1,5 +1,6 @@
 package com.belhard.bookstore.controller.command.impl;
 
+import com.belhard.bookstore.dao.entity.Order;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.OrderService;
 import com.belhard.bookstore.service.UserService;
@@ -29,8 +30,6 @@ import java.util.Map;
 @RequestMapping("/orders")
 public class OrdersController  {
 
-
-    @Autowired
     private static BookService bookService;
     private static UserService userService;
     private static OrderService orderService;
@@ -57,7 +56,7 @@ public class OrdersController  {
 
     @GetMapping
     public String execute(Model model) {
-        List<OrderDto> orders = orderService.getAllOrders();
+        List<OrderDto> orders = orderService.getAllOrders(0,10);
         model.addAttribute("orders", orders);
         return "orders";
     }
@@ -90,33 +89,52 @@ public class OrdersController  {
         return "order";
     }
 
-//    @PostMapping("/{id}")
-//    public String update(Model model, @PathVariable Long id, @RequestParam Map<String, Object> params){
-//        BookDto bookDto = bookService.getBookById(id);
+
+    @PostMapping("/{id}")
+    @Transactional
+    public String update(Model model, @PathVariable Long id, @RequestParam Map<String, Object> params){
+        OrderDto orderDto = orderService.getOrderById(id);
+        List<OrderItemDto> itemDtos = new ArrayList<>();
+        // for (OrderItemDto orderItem : itemDtos) {
+        OrderItemDto orderItem = new OrderItemDto();
+        BookDto bookDto = bookService.getBookById(5L);
+        orderItem.setBookDto(bookDto);
+        orderItem.setPrice(bookDto.getPrice());
+        orderItem.setQuantity(2/*Integer.valueOf(params.get("quantity").toString())*/);
+
+        itemDtos.add(orderItem);
+
+       // OrderDto orderDto = new OrderDto();
+        UserDto userDto = userService.getUserById(3L);
+        orderDto.setUserDto(userDto) ;
+        orderDto.setTotalCost( new BigDecimal("25")/*orderDto.getTotalCost()*/);
+        orderDto.setTimestamp(LocalDateTime.now());
+        orderDto.setStatusDto(OrderDto.StatusDto.PAID);
+        orderDto.setItems(itemDtos);
 //        bookDto.setIsbn(params.get("isbn").toString());
 //        bookDto.setTitle(params.get("title").toString());
 //        bookDto.setAuthor(params.get("author").toString());
 //        bookDto.setPages(Integer.valueOf(params.get("pages").toString()));
 //        bookDto.setCover(BookDto.CoverDto.valueOf(params.get("cover").toString()));
 //        bookDto.setPrice( new BigDecimal (params.get("price").toString()));
-//        BookDto updated = bookService.updateBook(bookDto);
-//        model.addAttribute("book", updated);
-//        return "book";
-//    }
-//
-//    @PostMapping("/delete/{id}")
-//    public  String delete (Model model, @PathVariable Long id){
-//        bookService.deleteBook(id);
-//        model.addAttribute("message", "Book with id = " + id + " is deleted");
-//        return "delete";
-//    }
-//
-//    @GetMapping("/edit/{id}")
-//    public  String editForm (Model model, @PathVariable Long id){
-//        BookDto bookDto = bookService.getBookById(id);
-//        model.addAttribute("book", bookDto);
-//        return "bookUpdate";
-//    }
+        OrderDto updated = orderService.updateOrder(orderDto);
+        model.addAttribute("order", updated);
+        return "order";
+    }
+
+    @PostMapping("/delete/{id}")
+    public  String delete (Model model, @PathVariable Long id){
+        orderService.deleteOrder(id);
+        model.addAttribute("message", "Order with id = " + id + " is deleted");
+        return "delete";
+    }
+
+    @GetMapping("/edit/{id}")
+    public  String editForm (Model model, @PathVariable Long id){
+        OrderDto orderDto = orderService.getOrderById(id);
+        model.addAttribute("order", orderDto);
+        return "orderUpdate";
+    }
 
     @GetMapping("/create")
     public String createForm(){

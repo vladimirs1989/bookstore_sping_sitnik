@@ -42,7 +42,7 @@ public class UsersController implements Command {
 
     @GetMapping
     public String execute(Model model) {
-        List<UserDto> users = userService.getAllUser();
+        List<UserDto> users = userService.getAllUser(0,25);
         model.addAttribute("users", users);
         return "users";
     }

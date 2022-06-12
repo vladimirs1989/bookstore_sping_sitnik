@@ -1,42 +1,42 @@
 package com.belhard.bookstore.service.impl;
 
-import com.belhard.bookstore.dao.UserDao;
 import com.belhard.bookstore.dao.entity.User;
+import com.belhard.bookstore.dao.repository.UserRepository;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("userService")
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
-
-
-    /*public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }*/
-
 
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Override
-    public List<UserDto> getAllUser() {
+    public List<UserDto> getAllUser(int page, int size) {
         logger.debug("Start method service - getAllUser");
-        List<User> users = userDao.getAllUser();
-        return users.stream().map(entity -> toDto(entity))
+        Iterable<User> users = userRepository.findAllUsers(PageRequest.of(page, size, Sort.Direction.ASC, "lastName", "firstName"));
+        List<User> userList = new ArrayList<>();
+        users.forEach(userList::add);
+        return userList.stream().map(entity -> toDto(entity))
                 .collect(Collectors.toList());
     }
 
@@ -56,17 +56,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserById(Long id) {
         logger.debug("Start method service - getUserById(");
-        User user = userDao.getUserById(id);
-        if (user == null) {
-            throw new RuntimeException("Can not find user with Id = " + id);
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new RuntimeException("No user with id: " + id);
         }
-        return toDto(user);
+        return toDto(userOptional.get());
     }
 
     @Override
     public UserDto getUserByEmail(String email) {
         logger.debug("Start method service - getUserByEmail");
-        User user = userDao.getUserByEmail(email);
+        User user = userRepository.findUserByEmail(email);
         if (user == null) {
             throw new RuntimeException("Can not find user with Email: " + email);
         }
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getUserByLastname(String lastName) {
         logger.debug("Start method service - getUserByLastname");
-        List<User> users = userDao.getUserByLastname(lastName);
+        List<User> users = userRepository.findUserByLastName(lastName);
         return users.stream().map(entity -> toDto(entity))
                 .collect(Collectors.toList());
     }
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User with Email: " + userDto.getEmail() + " exists");
         }*/
         User newUser = toUser(userDto);
-        User createdUser = userDao.createUser(newUser);
+        User createdUser = userRepository.save(newUser);
         UserDto createdUserDto = toDto(createdUser);
         return createdUserDto;
     }
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Book with Isbn exists");
         }*/
         User newUser = toUser(userDto);
-        User receivedUser = userDao.updateUser(newUser);
+        User receivedUser = userRepository.save(newUser);
         UserDto updatedUserDto = toDto(receivedUser);
         return updatedUserDto;
     }
@@ -124,14 +124,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long id) {
         logger.debug("Start method service - deleteUser");
-        if (!userDao.deleteUser(id)) {
-            throw new RuntimeException("Book didn't delete");
-        }
+        userRepository.delUser(id);
     }
 
     @Override
     public int countAllUsers() {
         logger.debug("Start method service - countAllUsers");
-        return userDao.countAllUsers();
+        return (int) userRepository.count();
     }
 }

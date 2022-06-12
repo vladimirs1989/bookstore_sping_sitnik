@@ -6,6 +6,8 @@ import com.belhard.bookstore.dao.entity.Book;
 import com.belhard.bookstore.dao.entity.Order;
 import com.belhard.bookstore.dao.entity.OrderItem;
 import com.belhard.bookstore.dao.entity.User;
+import com.belhard.bookstore.dao.repository.OrderItemRepository;
+import com.belhard.bookstore.dao.repository.OrderRepository;
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.OrderService;
 import com.belhard.bookstore.service.UserService;
@@ -14,12 +16,15 @@ import com.belhard.bookstore.service.dto.OrderDto;
 import com.belhard.bookstore.service.dto.OrderItemDto;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service("orderService")
@@ -39,15 +44,39 @@ public class OrderServiceImpl implements OrderService {
         this.bookService = bookService;
     }
 
+    private OrderRepository orderRepository;
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    public void setOrderRepository(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
+
+    @Autowired
+    public void setOrderItemRepository(OrderItemRepository orderItemRepository) {
+        this.orderItemRepository = orderItemRepository;
+    }
+
     @Override
-    public List<OrderDto> getAllOrders() {
-        return orderDao.getAllOrders().stream().map(this::mapToDto).collect(Collectors.toList());
+    public List<OrderDto> getAllOrders(int page, int size) {
+        //return orderDao.getAllOrders().stream().map(this::mapToDto).collect(Collectors.toList());
+
+        Iterable<Order> orders = orderRepository.findAllOrder(PageRequest.of(page, size, Sort.Direction.ASC, "id"));
+        List<Order> orderList = new ArrayList<>();
+        orders.forEach(orderList::add);
+        return orderList.stream().map(entity -> mapToDto(entity))
+                .collect(Collectors.toList());
     }
 
     @Override
     public OrderDto getOrderById(Long id) {
-        Order order = orderDao.getOrderById(id);
-        return mapToDto(order);
+//        Order order = orderDao.getOrderById(id);
+//        return mapToDto(order);
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        if (orderOptional.isEmpty()) {
+            throw new RuntimeException("No order with id: " + id);
+        }
+        return mapToDto(orderOptional.get());
     }
 
     private OrderDto mapToDto(Order order) {
@@ -58,7 +87,8 @@ public class OrderServiceImpl implements OrderService {
         orderDto.setStatusDto(OrderDto.StatusDto.valueOf(order.getStatus().toString()));
         UserDto userDto = userService.getUserById(order.getUser().getId());
         orderDto.setUserDto(userDto);
-        List<OrderItem> items = orderItemDao.getByOrderItemId(order.getId());
+        //List<OrderItem> items = orderItemDao.getByOrderId(order.getId());
+        List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
         List<OrderItemDto> itemDtos = new ArrayList<>();
         for (OrderItem item : items) {
             OrderItemDto itemDto = new OrderItemDto();
@@ -74,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+    //@Transactional
     public OrderDto createOrder(OrderDto orderDto) {
         BigDecimal totalCost = calculateOrderCost(orderDto);
         orderDto.setTotalCost(totalCost);
@@ -86,19 +116,24 @@ public class OrderServiceImpl implements OrderService {
         entity.setUser(user);
         entity.setTimestamp(orderDto.getTimestamp());
         entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
-
-        orderDao.createOrder(entity);
-
+        orderRepository.save(entity);
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
-            OrderItem item = mapToEntity( itemDto);
-            orderItemDao.createOrderItem(item);
+            OrderItem item = new OrderItem();
+            item.setOrder(entity);
+            Book book = toBook(itemDto.getBookDto());
+            item.setBook(book);
+            item.setQuantity(itemDto.getQuantity());
+            item.setPrice(itemDto.getPrice());
+            //orderItemDao.createOrderItem(item);
+
+            orderItemRepository.save(item);
         }
-        return getOrderById(orderDto.getId());
+        return getOrderById(entity.getId());
     }
 
-    private Order OrderDtoToOrder(OrderDto orderDto) {
+/*    private Order OrderDtoToOrder(OrderDto orderDto) {
 
         Order entity = new Order();
 
@@ -110,9 +145,9 @@ public class OrderServiceImpl implements OrderService {
         entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
 
         return entity;
-    }
+    }*/
 
-    public User toUser(UserDto userDto) {
+    private User toUser(UserDto userDto) {
         User user = new User();
         user.setId(userDto.getId());
         user.setLastName(userDto.getLastName());
@@ -128,11 +163,12 @@ public class OrderServiceImpl implements OrderService {
 
     public List<OrderDto> getAllOrdersByUserId(Long id){
         UserDto userDto = userService.getUserById(id);
-        List<OrderDto> orderDtos = getAllOrders();
+        List<OrderDto> orderDtos = getAllOrders(0,10);
         return  orderDtos.stream().filter(od->od.getUserDto().getId() == id).collect(Collectors.toList());
     }
 
     @Override
+    //@Transactional
     public OrderDto updateOrder(OrderDto orderDto) {
         BigDecimal totalCost = calculateOrderCost(orderDto);
         orderDto.setTotalCost(totalCost);
@@ -140,21 +176,34 @@ public class OrderServiceImpl implements OrderService {
         Order entity = new Order();
         entity.setId(orderDto.getId());
         entity.setTotalCost(orderDto.getTotalCost());
-        entity.setUser(entity.getUser());
+        User user = toUser(orderDto.getUserDto());
+        entity.setUser(user);
         entity.setTimestamp(orderDto.getTimestamp());
-        entity.setStatus(entity.getStatus());
-        orderDao.updateOrder(entity);
+        entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
+        //orderDao.updateOrder(entity);
+        orderRepository.save(entity);
 
-        List<OrderItem> items = orderItemDao.getByOrderItemId(orderDto.getId());
+        //List<OrderItem> items = orderItemDao.getByOrderId(orderDto.getId());
+        List<OrderItem> items = orderItemRepository.findByOrderId(orderDto.getId());
         for (OrderItem item : items) {
-            orderItemDao.deleteOrderItem(item.getId());
+            //orderItemDao.deleteOrderItem(item.getId());
+            orderItemRepository.delete(item);
         }
 
         List<OrderItemDto> itemDtos = orderDto.getItems();
         for (OrderItemDto itemDto : itemDtos) {
-            OrderItem item = mapToEntity( itemDto);
-            orderItemDao.createOrderItem(item);
+            OrderItem item = new OrderItem();
+            item.setOrder(entity);
+            Book book = toBook(itemDto.getBookDto());
+            item.setBook(book);
+            item.setQuantity(itemDto.getQuantity());
+            item.setPrice(itemDto.getPrice());
+            //orderItemDao.createOrderItem(item);
+            //orderItemRepository.save(item); /*это не надо!!! но не создает*/
+
         }
+        //orderDto.setItems(itemDtos);
+        //orderRepository.save(entity);
         return getOrderById(orderDto.getId());
 
     }
@@ -169,15 +218,15 @@ public class OrderServiceImpl implements OrderService {
         return totalCost;
     }
 
-    private OrderItem mapToEntity(OrderItemDto itemDto) {
+/*    private OrderItem mapToEntity(OrderItemDto itemDto) {
         OrderItem item = new OrderItem();
-        item.setOrder(OrderDtoToOrder(itemDto.getOrderDto()));
+        item.setOrder(orderDao.getOrderById(item.getOrder().getId()));
         item.setPrice(itemDto.getPrice());
         item.setQuantity(itemDto.getQuantity());
         Book book = toBook(itemDto.getBookDto());
         item.setBook(book);
         return item;
-    }
+    }*/
 
     private Book toBook(BookDto bookDto) {
         Book book = new Book();
@@ -192,10 +241,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void deleteOrder(Long id) {
-        List<OrderItem> items = orderItemDao.getByOrderItemId(id);
+        //List<OrderItem> items = orderItemDao.getByOrderId(id);
+        List<OrderItem> items = orderItemRepository.findByOrderId(id);
         items.forEach(i -> {
-            orderItemDao.deleteOrderItem(i.getId());
+            //orderItemDao.deleteOrderItem(i.getId());
+            orderItemRepository.delete(i);
         });
+        orderRepository.delOrder(id);
     }
 }

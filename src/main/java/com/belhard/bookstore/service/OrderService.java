@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface OrderService {
 
-    List<OrderDto> getAllOrders();
+    List<OrderDto> getAllOrders(int page, int size);
 
     OrderDto getOrderById(Long id);
 
