@@ -17,6 +17,7 @@ import com.belhard.bookstore.service.dto.OrderItemDto;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -58,10 +59,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDto> getAllOrders(int page, int size) {
+    public List<OrderDto> getAllOrders(Pageable pageable) {
         //return orderDao.getAllOrders().stream().map(this::mapToDto).collect(Collectors.toList());
 
-        Iterable<Order> orders = orderRepository.findAllOrder(PageRequest.of(page, size, Sort.Direction.ASC, "id"));
+        Iterable<Order> orders = orderRepository.findAllOrder(pageable);
         List<Order> orderList = new ArrayList<>();
         orders.forEach(orderList::add);
         return orderList.stream().map(entity -> mapToDto(entity))
@@ -160,11 +161,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-    public List<OrderDto> getAllOrdersByUserId(Long id){
+  /*  public List<OrderDto> getAllOrdersByUserId(Long id){
         UserDto userDto = userService.getUserById(id);
         List<OrderDto> orderDtos = getAllOrders(0,10);
         return  orderDtos.stream().filter(od->od.getUserDto().getId() == id).collect(Collectors.toList());
-    }
+    }*/
 
     @Override
     //@Transactional

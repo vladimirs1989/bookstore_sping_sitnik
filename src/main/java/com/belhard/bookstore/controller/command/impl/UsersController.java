@@ -4,6 +4,9 @@ import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +22,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/users")
-public class UsersController implements Command {
+public class UsersController  {
 
     private static UserService userService;
 
@@ -41,9 +44,10 @@ public class UsersController implements Command {
 
 
     @GetMapping
-    public String execute(Model model) {
-        List<UserDto> users = userService.getAllUser(0,25);
+    public String execute(Model model, @PageableDefault(sort = {"lastName", "firstName"}, direction =  Sort.Direction.ASC) Pageable pageable) {
+        List<UserDto> users = userService.getAllUser(pageable);
         model.addAttribute("users", users);
+        model.addAttribute("page", pageable);
         return "users";
     }
 

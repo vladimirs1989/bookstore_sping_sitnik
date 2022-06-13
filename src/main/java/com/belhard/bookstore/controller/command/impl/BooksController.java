@@ -60,6 +60,8 @@ public class BooksController {
         List<BookDto> books = bookService.getAllBooks(pageable);
         model.addAttribute("books", books);
         model.addAttribute("page", pageable);
+
+
         return "books";
     }
 
@@ -68,6 +70,10 @@ public class BooksController {
     public String create(Model model, @RequestParam Map<String, Object> params){
         BookDto bookDto = new BookDto();
         bookDto.setIsbn(params.get("isbn").toString());
+        if (bookDto.getIsbn() == null) {
+            model.addAttribute("message", "No entered isbn ");
+            return "error";
+        }
         bookDto.setTitle(params.get("title").toString());
         bookDto.setAuthor(params.get("author").toString());
         bookDto.setPages(Integer.valueOf(params.get("pages").toString()));

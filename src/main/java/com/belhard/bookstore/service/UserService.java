@@ -1,12 +1,13 @@
 package com.belhard.bookstore.service;
 
 import com.belhard.bookstore.service.dto.UserDto;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface UserService {
 
-    List<UserDto> getAllUser(int page, int size);
+    List<UserDto> getAllUser(Pageable pageable);
 
     UserDto getUserById(Long id);
 

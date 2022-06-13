@@ -8,8 +8,8 @@
 <h1>Welcome to our bookstore</h1>
 <ul>
     <li><a href="/books?page=0&size=5">All books</a> </li>
-    <li><a href="/users">All users</a> </li>
-    <li><a href="/orders">All orders</a> </li>
+    <li><a href="/users?page=0&size=5">All users</a> </li>
+    <li><a href="/orders?page=0&size=5">All orders</a> </li>
 </ul>
 </body>
 </html>

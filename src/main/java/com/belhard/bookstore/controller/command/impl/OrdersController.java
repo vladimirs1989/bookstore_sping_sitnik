@@ -9,6 +9,9 @@ import com.belhard.bookstore.service.dto.OrderDto;
 import com.belhard.bookstore.service.dto.OrderItemDto;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,9 +58,10 @@ public class OrdersController  {
 
 
     @GetMapping
-    public String execute(Model model) {
-        List<OrderDto> orders = orderService.getAllOrders(0,10);
+    public String execute(Model model,  @PageableDefault(sort = {"id"}, direction =  Sort.Direction.ASC) Pageable pageable) {
+        List<OrderDto> orders = orderService.getAllOrders(pageable);
         model.addAttribute("orders", orders);
+        model.addAttribute("page", pageable);
         return "orders";
     }
 
@@ -71,8 +75,7 @@ public class OrdersController  {
             BookDto bookDto = bookService.getBookById(9L);
             orderItem.setBookDto(bookDto);
             orderItem.setPrice(bookDto.getPrice());
-            orderItem.setQuantity(2/*Integer.valueOf(params.get("quantity").toString())*/);
-
+            orderItem.setQuantity(Integer.valueOf(params.get("quantity").toString()));
             itemDtos.add(orderItem);
 
         OrderDto orderDto = new OrderDto();
@@ -86,6 +89,8 @@ public class OrdersController  {
 
         OrderDto created = orderService.createOrder(orderDto);
         model.addAttribute("order", created);
+        model.addAttribute("bookDto", bookDto);
+        model.addAttribute("userDto", userDto);
         return "order";
     }
 
@@ -104,20 +109,15 @@ public class OrdersController  {
 
         itemDtos.add(orderItem);
 
-       // OrderDto orderDto = new OrderDto();
         UserDto userDto = userService.getUserById(3L);
         orderDto.setUserDto(userDto) ;
         orderDto.setTotalCost( new BigDecimal("25")/*orderDto.getTotalCost()*/);
         orderDto.setTimestamp(LocalDateTime.now());
         orderDto.setStatusDto(OrderDto.StatusDto.PAID);
         orderDto.setItems(itemDtos);
-//        bookDto.setIsbn(params.get("isbn").toString());
-//        bookDto.setTitle(params.get("title").toString());
-//        bookDto.setAuthor(params.get("author").toString());
-//        bookDto.setPages(Integer.valueOf(params.get("pages").toString()));
-//        bookDto.setCover(BookDto.CoverDto.valueOf(params.get("cover").toString()));
-//        bookDto.setPrice( new BigDecimal (params.get("price").toString()));
+
         OrderDto updated = orderService.updateOrder(orderDto);
+        model.addAttribute("orderItem", orderItem);
         model.addAttribute("order", updated);
         return "order";
     }

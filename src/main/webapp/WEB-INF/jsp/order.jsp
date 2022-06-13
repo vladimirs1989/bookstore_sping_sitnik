@@ -31,7 +31,7 @@
            </c:forEach>
 </table>
 
-            <li><a href="/orders">All orders</a> </li>
+            <li><a href="/orders?page=0&size=5">All orders</a> </li>
 
 </body>
 </html>

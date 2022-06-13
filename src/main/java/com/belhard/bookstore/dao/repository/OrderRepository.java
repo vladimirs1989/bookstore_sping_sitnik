@@ -2,6 +2,7 @@ package com.belhard.bookstore.dao.repository;
 
 import com.belhard.bookstore.dao.entity.Order;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 
     @Query("from Order where deleted = false")
-    List<Order> findAllOrder(PageRequest id);
+    List<Order> findAllOrder(Pageable pageable);
 
 
     @Modifying

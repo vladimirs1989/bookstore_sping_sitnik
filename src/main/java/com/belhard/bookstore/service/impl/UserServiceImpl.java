@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +32,9 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Override
-    public List<UserDto> getAllUser(int page, int size) {
+    public List<UserDto> getAllUser(Pageable pageable) {
         logger.debug("Start method service - getAllUser");
-        Iterable<User> users = userRepository.findAllUsers(PageRequest.of(page, size, Sort.Direction.ASC, "lastName", "firstName"));
+        Iterable<User> users = userRepository.findAllUsers(pageable);
         List<User> userList = new ArrayList<>();
         users.forEach(userList::add);
         return userList.stream().map(entity -> toDto(entity))

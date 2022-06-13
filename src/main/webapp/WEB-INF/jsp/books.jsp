@@ -7,6 +7,8 @@
 </head>
 <body>
 <h1>Books</h1>
+<div> <form action="/books/create" method="get"><input type = "submit" value = "Create book"></form></div>
+
 <table>
     <tr>
         <th>Id</th>
@@ -38,31 +40,21 @@
     </c:forEach>
 </table>
 
-<div> <form action="/books/create" method="get"><input type = "submit" value = "Create book"></form></div>
-<c:if test="${page.getPageNumber() == 0}">
+<c:if test="${page.getPageNumber() == 0 && books.size()==page.getPageSize()}">
 <div>
-
-
-    <!--<li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item active" aria-current="page">
-        <a class="page-link" href="/books?page=1&size=5">2</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="/books?page=2&size=5">3</a></li>-->
-
         <a class="page-link" href="/books?page=${page.getPageNumber()+1}&size=5">Next page</a>
 </div>
 </c:if>
-<c:if test="${page.getPageNumber()!=0 }">
+<c:if test="${page.getPageNumber()!=0 && books.size()==page.getPageSize() }">
     <div>
         <a class="page-link" href="/books?page=${page.getPageNumber()-1}&size=5" >Previous page</a>
 
-        <!--<li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item active" aria-current="page">
-            <a class="page-link" href="/books?page=1&size=5">2</a>
-        </li>
-        <li class="page-item"><a class="page-link" href="/books?page=2&size=5">3</a></li>-->
-
         <a class="page-link" href="/books?page=${page.getPageNumber()+1}&size=5">Next page</a>
+    </div>
+</c:if>
+<c:if test="${books.size()<page.getPageSize() }">
+    <div>
+        <a class="page-link" href="/books?page=${page.getPageNumber()-1}&size=5" >Previous page</a>
     </div>
 </c:if>
 

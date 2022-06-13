@@ -38,5 +38,23 @@
     </c:forEach>
 </table>
 <div> <form action="/users/create" method="get"><input type = "submit" value = "Create user"></form></div>
+
+<c:if test="${page.getPageNumber() == 0 && users.size()==page.getPageSize()}">
+    <div>
+        <a class="page-link" href="/users?page=${page.getPageNumber()+1}&size=5">Next page</a>
+    </div>
+</c:if>
+<c:if test="${page.getPageNumber()!=0 && users.size()==page.getPageSize() }">
+    <div>
+        <a class="page-link" href="/users?page=${page.getPageNumber()-1}&size=5" >Previous page</a>
+
+        <a class="page-link" href="/users?page=${page.getPageNumber()+1}&size=5">Next page</a>
+    </div>
+</c:if>
+<c:if test="${users.size()<page.getPageSize() }">
+    <div>
+        <a class="page-link" href="/users?page=${page.getPageNumber()-1}&size=5" >Previous page</a>
+    </div>
+</c:if>
 </body>
 </html>

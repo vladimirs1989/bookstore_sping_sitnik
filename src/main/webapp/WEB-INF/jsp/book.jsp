@@ -13,7 +13,9 @@
         <div>cover: ${book.cover.toString().toLowerCase()}</div>
         <div>price: ${book.price}</div>
         <ul>
-            <li><a href="/books?page=0&size=10">All books</a> </li>
+            <li><a href="/books?page=0&size=5">All books</a> </li>
         </ul>
+
+        <form action="/orders/create" method="get"><input type = "submit" value = "Add to order"></form>
 </body>
 </html>

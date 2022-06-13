@@ -7,19 +7,19 @@
 <body>
 <form action="/books" method="post">
     <label for="isbn-input">Isbn:</label>
-    <input id="isbn-input" name="isbn" type="text"/>
+    <input id="isbn-input" name="isbn" type="text" required/>
     <br/>
     <label for="title-input">Title:</label>
-    <input id="title-input" name="title" type="text"/>
+    <input id="title-input" name="title" type="text"required/>
     <br/>
     <label for="author-input">Author:</label>
-    <input id="author-input" name="author" type="text"/>
+    <input id="author-input" name="author" type="text" required/>
     <br/>
     <label for="pages-input">Pages:</label>
-    <input id="pages-input" name="pages" type="number"/>
+    <input id="pages-input" name="pages" type="number" required/>
     <br/>
     <label for="cover-input">Cover:</label>
-    <input id="cover-input" name="cover" type="text"/>
+    <input id="cover-input" name="cover" type="text" required/>
     <br/>
     <!--<label>Cover:
         <select name="covers">
@@ -30,7 +30,7 @@
     </label>
     <br/>-->
     <label for="price-input">Price:</label>
-    <input id="price-input" name="price" type="number"/>
+    <input id="price-input" name="price" type="number" required/>
     <br/>
     <input type="submit" value="Create">
 </form>

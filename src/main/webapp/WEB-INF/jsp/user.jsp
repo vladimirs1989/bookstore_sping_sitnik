@@ -14,7 +14,7 @@
                 <div>age: ${user.age}</div>
                 <div>role: ${user.role.toString().toLowerCase()}</div>
                 <ul>
-                     <li><a href="/users">All users</a> </li>
+                     <li><a href="/users?page=0&size=5">All users</a> </li>
                 </ul>
 </body>
 </html>
