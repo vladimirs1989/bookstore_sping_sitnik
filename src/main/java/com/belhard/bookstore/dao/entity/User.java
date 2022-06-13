@@ -43,7 +43,7 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private Roles role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL})
     private List<Order> orders;
 
     public enum Roles{

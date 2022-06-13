@@ -127,7 +127,6 @@ public class OrderServiceImpl implements OrderService {
             item.setQuantity(itemDto.getQuantity());
             item.setPrice(itemDto.getPrice());
             //orderItemDao.createOrderItem(item);
-
             orderItemRepository.save(item);
         }
         return getOrderById(entity.getId());
@@ -181,7 +180,7 @@ public class OrderServiceImpl implements OrderService {
         entity.setTimestamp(orderDto.getTimestamp());
         entity.setStatus(Order.Status.valueOf(orderDto.getStatusDto().toString()));
         //orderDao.updateOrder(entity);
-        orderRepository.save(entity);
+        orderRepository.save(entity);/*это не надо!!! но не создает*/
 
         //List<OrderItem> items = orderItemDao.getByOrderId(orderDto.getId());
         List<OrderItem> items = orderItemRepository.findByOrderId(orderDto.getId());
@@ -199,7 +198,7 @@ public class OrderServiceImpl implements OrderService {
             item.setQuantity(itemDto.getQuantity());
             item.setPrice(itemDto.getPrice());
             //orderItemDao.createOrderItem(item);
-            //orderItemRepository.save(item); /*это не надо!!! но не создает*/
+            orderItemRepository.save(item);
 
         }
         //orderDto.setItems(itemDtos);
@@ -243,10 +242,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void deleteOrder(Long id) {
-        //List<OrderItem> items = orderItemDao.getByOrderId(id);
         List<OrderItem> items = orderItemRepository.findByOrderId(id);
         items.forEach(i -> {
-            //orderItemDao.deleteOrderItem(i.getId());
             orderItemRepository.delete(i);
         });
         orderRepository.delOrder(id);
