@@ -155,7 +155,7 @@ CREATE TABLE IF NOT EXISTS order_items(
     order_id BIGSERIAL REFERENCES orders,
     book_id BIGSERIAL REFERENCES books,
     quantity BIGINT DEFAULT 1,
-    price DECIMAL (6,2) REFERENCES books.price
+    price DECIMAL (6,2)
 );
 
 /*
