@@ -72,7 +72,8 @@ CREATE TABLE  IF NOT EXISTS users(
     password VARCHAR(255) NOT NULL,
     age INTEGER,
     roles INTEGER,
-    deleted BOOLEAN DEFAULT false NOT NULL
+    deleted BOOLEAN DEFAULT false NOT NULL,
+    "active" BOOLEAN DEFAULT true NOT NULL
 );
 
 /*

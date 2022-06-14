@@ -6,16 +6,16 @@
 </head>
 <body>
 <form action="/orders" method="post">
-    <!--<div>Practis ${orderItem.book.id}</div>-->
-    <label for="book-input">Book:</label>
-    <input id="book-input" name="book" type="text"/>
+    <label for="book-input">Book (enter number of need book):</label>
+    <input id="book-input" name="book" type="text" required/>
     <br/>
-    <label for="price-input">Price:</label>
-    <input id="price-input" name="price" type="text"/>
+    <label for="user-input">User (enter user id):</label>
+    <input id="user-input" name="user" type="text" required/>
     <br/>
     <label for="quantity-input">Quantity:</label>
-    <input id="quantity-input" name="quantity" type="number"/>
+    <input id="quantity-input" name="quantity" type="number" required/>
     <br/>
+
 
     <input type="submit" value="Create">
 </form>

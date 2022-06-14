@@ -52,5 +52,10 @@
         <a class="page-link" href="/orders?page=${page.getPageNumber()-1}&size=5" >Previous page</a>
     </div>
 </c:if>
+
+<ul>
+    <li><a href="/books?page=0&size=5">All books</a> </li>
+    <li><a href="/users?page=0&size=5">All users</a> </li>
+</ul>
 </body>
 </html>

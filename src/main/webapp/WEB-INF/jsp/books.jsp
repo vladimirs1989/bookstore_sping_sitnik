@@ -58,6 +58,11 @@
     </div>
 </c:if>
 
+<ul>
+    <li><a href="/users?page=0&size=5">All users</a> </li>
+    <li><a href="/orders?page=0&size=5">All orders</a> </li>
+</ul>
+
 
 </body>
 </html>

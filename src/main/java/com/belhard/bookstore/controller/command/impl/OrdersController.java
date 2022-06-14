@@ -72,16 +72,16 @@ public class OrdersController  {
         List<OrderItemDto> itemDtos = new ArrayList<>();
        // for (OrderItemDto orderItem : itemDtos) {
             OrderItemDto orderItem = new OrderItemDto();
-            BookDto bookDto = bookService.getBookById(9L);
+            BookDto bookDto = bookService.getBookById(Long.valueOf(params.get("book").toString()));
             orderItem.setBookDto(bookDto);
             orderItem.setPrice(bookDto.getPrice());
             orderItem.setQuantity(Integer.valueOf(params.get("quantity").toString()));
             itemDtos.add(orderItem);
 
         OrderDto orderDto = new OrderDto();
-        UserDto userDto = userService.getUserById(2L);
+        UserDto userDto = userService.getUserById(Long.valueOf(params.get("user").toString()));
         orderDto.setUserDto(userDto) ;
-        orderDto.setTotalCost( new BigDecimal("20")/*orderDto.getTotalCost()*/);
+        orderDto.setTotalCost( new BigDecimal("0")/*orderDto.getTotalCost()*/);
         orderDto.setTimestamp(LocalDateTime.now());
         orderDto.setStatusDto(OrderDto.StatusDto.NOT_PAID);
         orderDto.setItems(itemDtos);
@@ -102,16 +102,16 @@ public class OrdersController  {
         List<OrderItemDto> itemDtos = new ArrayList<>();
         // for (OrderItemDto orderItem : itemDtos) {
         OrderItemDto orderItem = new OrderItemDto();
-        BookDto bookDto = bookService.getBookById(5L);
+        BookDto bookDto = bookService.getBookById(Long.valueOf(params.get("book").toString()));
         orderItem.setBookDto(bookDto);
         orderItem.setPrice(bookDto.getPrice());
         orderItem.setQuantity(2/*Integer.valueOf(params.get("quantity").toString())*/);
 
         itemDtos.add(orderItem);
 
-        UserDto userDto = userService.getUserById(3L);
+        UserDto userDto = userService.getUserById(Long.valueOf(params.get("user").toString()));
         orderDto.setUserDto(userDto) ;
-        orderDto.setTotalCost( new BigDecimal("25")/*orderDto.getTotalCost()*/);
+        orderDto.setTotalCost( new BigDecimal("0")/*orderDto.getTotalCost()*/);
         orderDto.setTimestamp(LocalDateTime.now());
         orderDto.setStatusDto(OrderDto.StatusDto.PAID);
         orderDto.setItems(itemDtos);
