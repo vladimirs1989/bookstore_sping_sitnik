@@ -22,10 +22,15 @@
     <input id="password-input" name="password" type="text" required/>
     <br/>
     <label for="age-input">Age:</label>
-    <input id="age-input" name="age" type="number" required/>
+    <input id="age-input" name="age" type="number" min="1" max="100" required/>
     <br/>
-    <label for="role-input">Role:</label>
-    <input id="role-input" name="role" type="text" required/>
+    <label>Role:
+        <select name="role">
+            <option value="ADMIN">ADMIN</option>
+            <option value="MANAGER">MANAGER</option>
+            <option value="CUSTOMER" selected>CUSTOMER</option>
+        </select>
+    </label>
     <br/>
     <input type="submit" value="Update">
 </form>

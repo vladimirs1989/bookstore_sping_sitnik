@@ -7,6 +7,7 @@
 </head>
 <body>
 <h1>Orders</h1>
+<div> <form action="/orders/create" method="get"><input type = "submit" value = "Create order"></form></div>
 <table>
     <tr>
         <th>Id</th>
@@ -33,7 +34,6 @@
     </tr>
     </c:forEach>
 </table>
-<div> <form action="/orders/create" method="get"><input type = "submit" value = "Create order"></form></div>
 
 <c:if test="${page.getPageNumber() == 0 && orders.size()==page.getPageSize()}">
     <div>

@@ -7,6 +7,7 @@
 </head>
 <body>
 <h1>Users</h1>
+<div> <form action="/users/create" method="get"><input type = "submit" value = "Create user"></form></div>
 <table>
     <tr>
         <th>Id</th>
@@ -37,7 +38,6 @@
     </tr>
     </c:forEach>
 </table>
-<div> <form action="/users/create" method="get"><input type = "submit" value = "Create user"></form></div>
 
 <c:if test="${page.getPageNumber() == 0 && users.size()==page.getPageSize()}">
     <div>

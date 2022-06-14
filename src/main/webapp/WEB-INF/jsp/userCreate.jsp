@@ -22,19 +22,16 @@
     <input id="password-input" name="password" type="text" required/>
     <br/>
     <label for="age-input">Age:</label>
-    <input id="age-input" name="age" type="number" required/>
+    <input id="age-input" name="age" type="number" min="1" max="100" required/>
     <br/>
-    <label for="role-input">Role:</label>
-    <input id="role-input" name="role" type="text" required/>
-    <br/>
-    <!--<label>Cover:
-        <select name="covers">
-            <option value="1">HARD</option>
-            <option value="2">SOFT</option>
-            <option value="3">ANOTHER</option>
+    <label>Role:
+        <select name="role">
+            <option value="ADMIN">ADMIN</option>
+            <option value="MANAGER">MANAGER</option>
+            <option value="CUSTOMER" selected>CUSTOMER</option>
         </select>
     </label>
-    <br/>-->
+    <br/>
     <input type="submit" value="Create">
 </form>
 </body>

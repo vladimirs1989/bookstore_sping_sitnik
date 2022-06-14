@@ -13,7 +13,7 @@
     <input id="user-input" name="user" type="text" required/>
     <br/>
     <label for="quantity-input">Quantity:</label>
-    <input id="quantity-input" name="quantity" type="number" required/>
+    <input id="quantity-input" name="quantity" type="number" min="1" max="30" required/>
     <br/>
 
 

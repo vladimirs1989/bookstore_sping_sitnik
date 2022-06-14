@@ -16,21 +16,18 @@
     <input id="author-input" name="author" type="text" required/>
     <br/>
     <label for="pages-input">Pages:</label>
-    <input id="pages-input" name="pages" type="number" required/>
+    <input id="pages-input" name="pages" type="number" min="1" required/>
     <br/>
-    <label for="cover-input">Cover:</label>
-    <input id="cover-input" name="cover" type="text" required/>
-    <br/>
-    <!--<label>Cover:
-        <select name="covers">
-            <option value="1">HARD</option>
-            <option value="2">SOFT</option>
-            <option value="3">ANOTHER</option>
+    <label>Cover:
+        <select name="cover">
+            <option value="HARD">HARD</option>
+            <option value="SOFT">SOFT</option>
+            <option value="ANOTHER">ANOTHER</option>
         </select>
     </label>
-    <br/>-->
+    <br/>
     <label for="price-input">Price:</label>
-    <input id="price-input" name="price" type="number" required/>
+    <input id="price-input" name="price" type="number" min="0" required/>
     <br/>
     <input type="submit" value="Create">
 </form>
