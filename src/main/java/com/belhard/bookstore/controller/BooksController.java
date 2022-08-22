@@ -2,8 +2,6 @@ package com.belhard.bookstore.controller;
 
 import com.belhard.bookstore.service.BookService;
 import com.belhard.bookstore.service.dto.BookDto;
-import org.hibernate.Session;
-import org.hibernate.engine.spi.SessionDelegatorBaseImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,8 +33,9 @@ public class BooksController {
 
     @GetMapping("/book/{id}")
     public String execute(Model model, @PathVariable Long id) {
-        BookDto bookDto = bookService.getBookById(id);
 
+        BookDto bookDto = bookService.getBookById(id);
+        //session.setAttribute("book", bookDto);
         if (bookDto == null) {
             model.addAttribute("message", "No book with id: " + id);
             return "error";
