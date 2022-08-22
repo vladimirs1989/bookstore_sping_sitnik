@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service("bookService")
 @Transactional
+
 public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;

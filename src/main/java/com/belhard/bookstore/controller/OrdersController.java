@@ -1,4 +1,4 @@
-package com.belhard.bookstore.controller.command.impl;
+package com.belhard.bookstore.controller;
 
 import com.belhard.bookstore.dao.entity.Order;
 import com.belhard.bookstore.service.BookService;
@@ -33,9 +33,9 @@ import java.util.Map;
 @RequestMapping("/orders")
 public class OrdersController  {
 
-    private static BookService bookService;
-    private static UserService userService;
-    private static OrderService orderService;
+    private final BookService bookService;
+    private final UserService userService;
+    private final OrderService orderService;
 
     @Autowired
     public OrdersController(OrderService orderService, BookService bookService, UserService userService) {

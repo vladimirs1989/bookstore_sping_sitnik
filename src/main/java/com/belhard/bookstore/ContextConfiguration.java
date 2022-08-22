@@ -5,9 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 
-//@Configuration
-//@ComponentScan
-//@EnableAutoConfiguration
 public class ContextConfiguration {
     public static void main(String[] args) {
         SpringApplication.run(ContextConfiguration.class, args);

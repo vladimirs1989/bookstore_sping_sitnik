@@ -1,6 +1,5 @@
-package com.belhard.bookstore.controller.command.impl;
+package com.belhard.bookstore.controller;
 
-import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Component
 @RequestMapping("/error")
-public class ErrorCommand implements Command {
+public class ErrorController  {
 
     private static BookService bookService;
 
     @Autowired
-    public ErrorCommand(BookService bookService) {
+    public ErrorController(BookService bookService) {
         this.bookService = bookService;
     }
 

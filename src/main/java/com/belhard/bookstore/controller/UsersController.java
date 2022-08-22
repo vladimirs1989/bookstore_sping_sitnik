@@ -1,6 +1,5 @@
-package com.belhard.bookstore.controller.command.impl;
+package com.belhard.bookstore.controller;
 
-import com.belhard.bookstore.controller.command.Command;
 import com.belhard.bookstore.service.UserService;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UsersController  {
 
-    private static UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UsersController(UserService userService) {

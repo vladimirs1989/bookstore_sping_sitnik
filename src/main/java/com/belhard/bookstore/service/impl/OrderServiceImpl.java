@@ -1,7 +1,5 @@
 package com.belhard.bookstore.service.impl;
 
-import com.belhard.bookstore.dao.OrderDao;
-import com.belhard.bookstore.dao.OrderItemDao;
 import com.belhard.bookstore.dao.entity.Book;
 import com.belhard.bookstore.dao.entity.Order;
 import com.belhard.bookstore.dao.entity.OrderItem;
@@ -16,9 +14,7 @@ import com.belhard.bookstore.service.dto.OrderDto;
 import com.belhard.bookstore.service.dto.OrderItemDto;
 import com.belhard.bookstore.service.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,15 +28,11 @@ import java.util.stream.Collectors;
 
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderDao orderDao;
-    private final OrderItemDao orderItemDao;
     private final UserService userService;
     private final BookService bookService;
 
     @Autowired
-    public OrderServiceImpl(OrderDao orderDao, OrderItemDao orderItemDao, UserService userService, BookService bookService) {
-        this.orderDao = orderDao;
-        this.orderItemDao = orderItemDao;
+    public OrderServiceImpl( UserService userService, BookService bookService) {
         this.userService = userService;
         this.bookService = bookService;
     }
