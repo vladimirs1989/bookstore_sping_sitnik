@@ -58,10 +58,7 @@ public class BookServiceImpl implements BookService {
     public BookDto getBookById(Long id) {
         logger.debug("Start method service - getBookById");
         Optional<Book> bookOptional = bookRepository.findById(id);
-        if (bookOptional.isEmpty()) {
-            throw new RuntimeException("No book with id: " + id);
-        }
-        return toDto(bookOptional.get());
+        return toDto(bookOptional.orElseThrow(() -> new RuntimeException("No book with id: " + id)));
     }
 
     @Override

@@ -59,10 +59,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserById(Long id) {
         logger.debug("Start method service - getUserById(");
         Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isEmpty()) {
-            throw new RuntimeException("No user with id: " + id);
-        }
-        return toDto(userOptional.get());
+        return toDto(userOptional.orElseThrow(() -> new RuntimeException("No user with id: " + id)));
     }
 
     @Override

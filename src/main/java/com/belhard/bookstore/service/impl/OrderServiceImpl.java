@@ -66,10 +66,7 @@ public class OrderServiceImpl implements OrderService {
 //        Order order = orderDao.getOrderById(id);
 //        return mapToDto(order);
         Optional<Order> orderOptional = orderRepository.findById(id);
-        if (orderOptional.isEmpty()) {
-            throw new RuntimeException("No order with id: " + id);
-        }
-        return mapToDto(orderOptional.get());
+        return mapToDto(orderOptional.orElseThrow(() -> new RuntimeException("No order with id: " + id)));
     }
 
     private OrderDto mapToDto(Order order) {
